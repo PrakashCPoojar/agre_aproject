@@ -8,7 +8,7 @@
    i) Istall required Dependency (flutter pub get)
    ii) flutter run
 
-## It will ask you to select platform if you are not running the Android studuio Simulator
+* It will ask you to select platform if you are not running the Android studuio Simulator
 
 ## Login Screens
 ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/80a2edab-3ebd-412f-b1b7-962036d1e0eb)
