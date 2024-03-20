@@ -11,7 +11,8 @@
 * It will ask you to select platform if you are not running the Android studuio Simulator
 
 ## Login Screens
-![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/80a2edab-3ebd-412f-b1b7-962036d1e0eb)
+![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/afab6e0d-4fa7-4bcd-a66c-1b44683c1aff)
+
 ## Home Page Screens
 ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b0b96081-ddc9-4294-a1b6-ac9a00293314)
 ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/86ab3c0a-d9ff-4ba3-bdb7-8481e89fc264)
