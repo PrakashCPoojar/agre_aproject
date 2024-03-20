@@ -228,9 +228,15 @@ class VerticalCard extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.3,
                   height: double.infinity,
-                  child: Image.asset(
-                    imageAssetPaths[index], // Load image from local assets
-                    fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8.0),
+                      bottomLeft: Radius.circular(8.0),
+                    ),
+                    child: Image.asset(
+                      imageAssetPaths[index], // Load image from local assets
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 // Middle section
