@@ -205,10 +205,16 @@ class LoginPage extends StatelessWidget {
         ),
         TextField(
           decoration: InputDecoration(
-            hintText: "Enter mobile numebr",
+            hintText: "Enter mobile number",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF595959)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // Set focused border
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor), // Use primary color
             ),
             filled: false,
             contentPadding:
@@ -216,6 +222,7 @@ class LoginPage extends StatelessWidget {
             prefixIcon: const Icon(Icons.phone),
           ),
         ),
+
         const SizedBox(height: 10),
         Container(
           margin: EdgeInsets.only(bottom: 10), // Add margin bottom here
@@ -230,6 +237,12 @@ class LoginPage extends StatelessWidget {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF595959)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              // Set focused border
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor), // Use primary color
             ),
             filled: false,
             contentPadding:
@@ -260,7 +273,9 @@ class LoginPage extends StatelessWidget {
                 },
                 child: const Text(
                   "Forgot password?",
-                  style: TextStyle(color: Color(0xFF779D07)),
+                  style: TextStyle(
+                    color: Color(0xFF779D07),
+                  ),
                 ),
               ),
             ),
@@ -423,6 +438,13 @@ class ForgotPassword extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
+                          ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 8), // Adjust input height here
@@ -551,6 +573,13 @@ class otpsection extends StatelessWidget {
                                 hintStyle: TextStyle(
                                   fontSize: 32,
                                 ),
+                                focusedBorder: OutlineInputBorder(
+                                  // Set focused border
+                                  borderRadius: BorderRadius.circular(18),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .primaryColor), // Use primary color
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18),
                                   borderSide:
@@ -580,6 +609,13 @@ class otpsection extends StatelessWidget {
                                 hintStyle: TextStyle(
                                   fontSize: 32,
                                 ),
+                                focusedBorder: OutlineInputBorder(
+                                  // Set focused border
+                                  borderRadius: BorderRadius.circular(18),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .primaryColor), // Use primary color
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18),
                                   borderSide:
@@ -609,6 +645,13 @@ class otpsection extends StatelessWidget {
                                 hintStyle: TextStyle(
                                   fontSize: 32,
                                 ),
+                                focusedBorder: OutlineInputBorder(
+                                  // Set focused border
+                                  borderRadius: BorderRadius.circular(18),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .primaryColor), // Use primary color
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18),
                                   borderSide:
@@ -637,6 +680,13 @@ class otpsection extends StatelessWidget {
                                 hintText: "0",
                                 hintStyle: TextStyle(
                                   fontSize: 32,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  // Set focused border
+                                  borderRadius: BorderRadius.circular(18),
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .primaryColor), // Use primary color
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18),
@@ -783,6 +833,13 @@ class resetpassword extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
+                          ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 8), // Adjust input height here
@@ -803,6 +860,13 @@ class resetpassword extends StatelessWidget {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
                           ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
@@ -921,6 +985,13 @@ class signup extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
+                          ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 8), // Adjust input height here
@@ -943,6 +1014,13 @@ class signup extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
+                          ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 8), // Adjust input height here
@@ -963,6 +1041,13 @@ class signup extends StatelessWidget {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
                           ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
@@ -1187,6 +1272,13 @@ class LoginWithEmailPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
                           ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
+                          ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 8), // Adjust input height here
@@ -1207,6 +1299,13 @@ class LoginWithEmailPage extends StatelessWidget {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Color(0xFF595959)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // Set focused border
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: BorderSide(
+                                color: Theme.of(context)
+                                    .primaryColor), // Use primary color
                           ),
                           filled: false,
                           contentPadding: EdgeInsets.symmetric(
