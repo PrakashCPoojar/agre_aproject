@@ -293,6 +293,9 @@ class HorizontalScrollCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.all(0),
       elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Container(
         height: 300,
         padding: EdgeInsets.all(8),
@@ -312,6 +315,7 @@ class HorizontalScrollCard extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 5,
+            // borderRadius: BorderRadius.circular(8),
             itemBuilder: (context, index) {
               return Container(
                 width: 170,
@@ -321,11 +325,17 @@ class HorizontalScrollCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 120,
                       width: 200,
-                      child: Image.asset(
-                        imageUrls[index],
-                        fit: BoxFit.cover,
+                      height: 120,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          topRight: Radius.circular(8.0),
+                        ),
+                        child: Image.asset(
+                          imageUrls[index], // Load image from local assets
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -441,9 +451,15 @@ class VerticalCard extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.3,
                   height: double.infinity,
-                  child: Image.asset(
-                    imageAssetPaths[index], // Load image from local assets
-                    fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8.0),
+                      bottomLeft: Radius.circular(8.0),
+                    ),
+                    child: Image.asset(
+                      imageAssetPaths[index], // Load image from local assets
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 // Middle section
