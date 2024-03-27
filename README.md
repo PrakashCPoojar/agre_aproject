@@ -10,33 +10,25 @@
 
 * It will ask you to select platform if you are not running the Android studuio Simulator
 
-## ![Screenshot 2024-03-26 161924](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/74e76515-6764-4351-b909-de3d6889195f)![Screenshot 2024-03-26 162836](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/95fa49c4-1f97-4cb8-8e4c-4b3c1d066820)
-![Screenshot 2024-03-26 162701](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/040003b3-7e1a-416a-b792-acf868db6534)
-![Screenshot 2024-03-26 162612](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/9ddd2eec-8962-4f5e-877b-386713a80a2a)
-![Screenshot 2024-03-26 162524](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/54a9a94e-9526-4e79-a922-8053ac85339b)
-![Screenshot 2024-03-26 162458](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/65f85808-6b3d-4c5e-b43f-c9c0e973f163)
-![Screenshot 2024-03-26 162355](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/62798e84-0136-48ac-aca2-2458f0a327a1)
-![Screenshot 2024-03-26 162302](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/da8a8caf-0b9c-4351-b538-b7224f21dbda)
-![Screenshot 2024-03-26 162144](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/7abac18c-4d2d-4002-9ac6-97cb5e896309)
-![Screenshot 2024-03-26 162113](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/5ebf4970-07f7-4f02-b660-a2aa50eb2bfa)
-
-
-![Screenshot 2024-03-26 161801](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/51edcdcd-e5f2-461f-aa3a-7ecb83f34d55)
-![Screenshot 2024-03-26 161702](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/a017e5f2-b387-4e07-aef2-470356d2870b)
-![Screenshot 2024-03-26 161611](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/aafa1ee3-7f35-47a9-b2c3-737d71abb945)
-![Screenshot 2024-03-26 161440](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/40c2d11a-67ff-4fa4-aa2a-5b8a90194d0a)
-![Screenshot 2024-03-26 161321](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/bc22356e-bc4c-4ddf-b5f9-b8ba48f2c0dc)
-![Screenshot 2024-03-26 165447](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/66741a29-4629-4c59-b22c-2677e633067c)
-![Screenshot 2024-03-26 165413](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/210c2adc-8433-402f-889a-79bdb9296d98)
-![Screenshot 2024-03-26 165310](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/e1da0c71-ef09-44d9-a607-5b640d755758)
-![Screenshot 2024-03-26 165230](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/d4dbd3f4-4327-4bc5-913c-4c600c8ef2c8)
-![Screenshot 2024-03-26 165133](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/969a3862-0eaf-414d-9ec9-fb7b4f0c4eeb)
-
-## Home Page Screens
-![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b0b96081-ddc9-4294-a1b6-ac9a00293314)
-![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/86ab3c0a-d9ff-4ba3-bdb7-8481e89fc264)
-
-
-
-
+## Project Screens
+![Screenshot 2024-03-26 161321](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/6b9c8b27-83ea-4013-9e87-c6d100b148ef)
+![Screenshot 2024-03-26 161440](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b653469c-ccca-4004-82ae-1db53a00a262)
+![Screenshot 2024-03-26 161611](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/ed1d3125-a104-456e-b2ca-eceaac4169af)
+![Screenshot 2024-03-26 161702](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/82ddfa15-1aff-4796-861e-2e4b388c1e37)
+![Screenshot 2024-03-26 161801](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/f1bf0681-da44-427e-a0a7-2fde20df89cf)
+![Screenshot 2024-03-26 161924](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b91d0210-dab6-4a98-90e1-753160271610)
+![Screenshot 2024-03-26 162113](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/136b0da1-656c-423d-b14e-1377a464c810)
+![Screenshot 2024-03-26 162144](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/cbb036a2-85d9-433d-9163-109d927b3af3)
+![Screenshot 2024-03-26 162302](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/8ac0c428-0f88-4b4a-a087-1b37f95b4336)
+![Screenshot 2024-03-26 162355](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/bddd1026-7247-4b7e-9840-1a6b3924bcfd)
+![Screenshot 2024-03-26 162458](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/6e2e2d0d-591c-4fc3-8eb7-0b8d683b5cf0)
+![Screenshot 2024-03-26 162524](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/51b68f58-9a1c-4b82-bedc-d45290c4f0cc)
+![Screenshot 2024-03-26 162612](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/40a96409-b456-42ff-bac5-147f48d857df)
+![Screenshot 2024-03-26 162701](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/52d73ae7-5132-4687-97e6-738d814f199e)
+![Screenshot 2024-03-26 162836](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/baec81e2-ac9c-4c12-ab99-6e5ce60c5590)
+![Screenshot 2024-03-26 165133](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/333e657a-56db-4920-ba3b-10e8e465593e)
+![Screenshot 2024-03-26 165230](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/23a56814-49fc-47e6-806d-284c7c7a4707)
+![Screenshot 2024-03-26 165310](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/960a3854-9add-4a11-9db7-19985370dfa5)
+![Screenshot 2024-03-26 165413](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/d37122e3-31c6-415b-a1df-ce504d6f23f0)
+![Screenshot 2024-03-26 165447](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/541716bb-ede8-48cd-851e-79469c0bb09c)
 
