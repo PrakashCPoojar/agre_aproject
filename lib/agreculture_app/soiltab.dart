@@ -293,7 +293,8 @@ class VerticalCard extends StatelessWidget {
                                   // Add onPressed action for the button
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  primary: Theme.of(context).primaryColor,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 0,
                                     vertical: 0,

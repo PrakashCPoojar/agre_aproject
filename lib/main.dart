@@ -85,8 +85,7 @@ class HomePage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF779D07), // Background color
-                    onPrimary: Colors.white, // Text color
+                    backgroundColor: Color(0xFF779D07), // Background color
                     elevation: 5, // Button shadow
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.0),
@@ -98,8 +97,7 @@ class HomePage extends StatelessWidget {
                     child: Text(
                       'Get Started',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ),

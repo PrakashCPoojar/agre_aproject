@@ -93,7 +93,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         'Selected date: $_selectedDay, Selected time: $_selectedTime');
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
+                    backgroundColor: Theme.of(context).primaryColor,
                   ),
                   child: Text(
                     'Confirm',
@@ -155,7 +155,7 @@ class _SuggestedTimesState extends State<SuggestedTimes> {
                       widget.onTimeSelected(time);
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: _selectedTime == time
+                      backgroundColor: _selectedTime == time
                           ? Color(0xFF779D07)
                           : Theme.of(context).primaryColor,
                     ),
