@@ -304,7 +304,7 @@ class soildetailsection extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).primaryColor,
                         padding: EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 10,
