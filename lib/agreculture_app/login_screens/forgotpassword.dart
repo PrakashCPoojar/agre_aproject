@@ -1,4 +1,4 @@
-import 'package:agre_aproject/agreculture_app/screens/otp.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/otp.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatelessWidget {

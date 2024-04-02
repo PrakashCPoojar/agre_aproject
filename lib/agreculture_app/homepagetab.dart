@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agre_aproject/agreculture_app/cropdetailpage.dart';
 
@@ -19,6 +20,12 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePageTab extends StatelessWidget {
+  final User = FirebaseAuth.instance.currentUser;
+
+  signout() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +55,7 @@ class HomePageTab extends StatelessWidget {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      'User\'s Name',
+                      '${User!.displayName}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -158,6 +165,14 @@ class HomePageTab extends StatelessWidget {
             ],
           ),
           actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Signout logic here
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pop();
+              },
+              child: Text('Sign Out'),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
