@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:agre_aproject/agreculture_app/screens/login.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -33,7 +33,7 @@ class _FlashPageState extends State<FlashPage> {
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => Wrapper()),
       );
     });
   }

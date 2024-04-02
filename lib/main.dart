@@ -1,7 +1,10 @@
-import 'package:agre_aproject/agreculture_app/screens/flash.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/flash.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

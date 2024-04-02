@@ -1,4 +1,4 @@
-import 'package:agre_aproject/agreculture_app/screens/resetpassword.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/resetpassword.dart';
 import 'package:flutter/material.dart';
 
 class otpsection extends StatelessWidget {

@@ -1,12 +1,44 @@
-import 'package:agre_aproject/agreculture_app/home.dart';
-import 'package:agre_aproject/agreculture_app/screens/forgotpassword.dart';
-import 'package:agre_aproject/agreculture_app/screens/loginwithemail.dart';
-import 'package:agre_aproject/agreculture_app/screens/signup.dart';
-import 'package:agre_aproject/main.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/forgotpassword.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/loginwithemail.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  // const LoginPage({super.key});
+
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  // Function to handle sign-in
+  void signin(BuildContext context) async {
+    // Validate if email and password are not empty
+    if (email.text.isEmpty || password.text.isEmpty) {
+      // Show error message if email or password is empty
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter email and password.'),
+        ),
+      );
+      return; // Stop execution if email or password is empty
+    }
+
+    try {
+      // Sign in with email and password
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email.text,
+        password: password.text,
+      );
+      // Navigate to the next screen or perform other actions
+    } catch (e) {
+      // Handle sign-in errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to sign in. Please check your credentials.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,56 +100,57 @@ class LoginPage extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(bottom: 10), // Add margin bottom here
           child: Text(
-            "Mobile Number",
+            "Email",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ),
-        TextField(
+        TextFormField(
+          controller: email,
           decoration: InputDecoration(
-            hintText: "Enter mobile number",
+            hintText: "Enter email",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF595959)),
             ),
-            focusedBorder: OutlineInputBorder(
-              // Set focused border
-              borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor), // Use primary color
-            ),
             filled: false,
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8), // Adjust input height here
-            prefixIcon: const Icon(Icons.phone),
+            prefixIcon: const Icon(Icons.email),
           ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter your email';
+            }
+            return null;
+          },
         ),
-
         const SizedBox(height: 10),
         Container(
           margin: EdgeInsets.only(bottom: 10), // Add margin bottom here
           child: Text(
-            "Mobile Number",
+            "Password",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ),
-        TextField(
+        TextFormField(
+          controller: password,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF595959)),
             ),
-            focusedBorder: OutlineInputBorder(
-              // Set focused border
-              borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor), // Use primary color
-            ),
             filled: false,
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8), // Adjust input height here
             prefixIcon: const Icon(Icons.lock),
           ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter your password';
+            }
+            return null;
+          },
           obscureText: true,
         ),
         const SizedBox(height: 5),
@@ -142,9 +175,7 @@ class LoginPage extends StatelessWidget {
                 },
                 child: const Text(
                   "Forgot password?",
-                  style: TextStyle(
-                    color: Color(0xFF779D07),
-                  ),
+                  style: TextStyle(color: Color(0xFF779D07)),
                 ),
               ),
             ),
@@ -156,12 +187,8 @@ class LoginPage extends StatelessWidget {
             padding:
                 EdgeInsets.symmetric(vertical: 10), // Add margin top and bottom
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                );
-              },
+              onPressed: () => signin(context),
+              // child: Text('Login'),
               style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),
                 minimumSize: Size(
