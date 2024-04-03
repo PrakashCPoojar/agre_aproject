@@ -154,7 +154,7 @@ class HomePageTab extends StatelessWidget {
               // ClipOval(),
               SizedBox(height: 10),
               Text(
-                'Full Name: Users Name',
+                'Full Name: ${User!.displayName}',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -162,14 +162,7 @@ class HomePageTab extends StatelessWidget {
               ),
               SizedBox(height: 15),
               Text(
-                'Contact Number: +1234567890',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Address: Your Address Here',
+                'Email: ${User!.email}',
                 style: TextStyle(
                   fontSize: 16,
                 ),

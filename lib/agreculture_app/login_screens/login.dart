@@ -157,10 +157,19 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF595959)),
             ),
+            focusedBorder: OutlineInputBorder(
+              // Define the border when field is focused
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide(color: Color(0xFF779D07)),
+              // Use primary color for the focused border
+            ),
             filled: false,
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8), // Adjust input height here
-            prefixIcon: const Icon(Icons.email),
+            prefixIcon: const Icon(
+              Icons.email,
+              color: Color(0xFF779D07),
+            ),
           ),
           validator: (value) {
             if (value!.isEmpty) {
@@ -185,10 +194,17 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF595959)),
             ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide(color: Color(0xFF779D07)),
+            ),
             filled: false,
             contentPadding:
                 EdgeInsets.symmetric(vertical: 8), // Adjust input height here
-            prefixIcon: const Icon(Icons.lock),
+            prefixIcon: const Icon(
+              Icons.lock,
+              color: Color(0xFF779D07),
+            ),
           ),
           validator: (value) {
             if (value!.isEmpty) {
@@ -280,8 +296,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         OutlinedButton(
-          onPressed: () => loginWithGoogle(
-              context), // Wrap the function call inside a function
+          onPressed: () => loginWithGoogle(context),
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Color(0xFF779D07)), // Set border color
+          ), // Wrap the function call inside a function
           child: const Text(
             'Login with Google',
             style: TextStyle(color: Color(0xFF779D07)),

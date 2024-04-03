@@ -1,4 +1,4 @@
-import 'package:agre_aproject/agreculture_app/home.dart';
+import 'package:agre_aproject/agreculture_app/homecontent.dart';
 import 'package:flutter/material.dart';
 
 class resetpassword extends StatelessWidget {
