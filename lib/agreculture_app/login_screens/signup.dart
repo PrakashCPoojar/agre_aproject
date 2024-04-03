@@ -1,7 +1,6 @@
 import 'package:agre_aproject/agreculture_app/home.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/login.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/termsandcondition.dart';
-import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +9,9 @@ import 'package:get/get.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Your App',
-      home: Wrapper(), // Make sure signup widget is your initial route
+    return GetMaterialApp(
+      key: Get.key, // Provide a key for contextless navigation
+      home: signup(),
     );
   }
 }
@@ -23,7 +22,18 @@ class signup extends StatelessWidget {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  _signup() async {
+  void _signup(BuildContext context) async {
+    // Check if email or password is empty
+    if (email.text.isEmpty || password.text.isEmpty) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter email and password.'),
+        ),
+      );
+      return; // Stop execution if email or password is empty
+    }
+
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -31,14 +41,17 @@ class signup extends StatelessWidget {
         password: password.text,
       );
 
-      // Update user's display name (full name)
       // Update user's display name (full name) if user is not null
       if (userCredential.user != null) {
         await userCredential.user!.updateDisplayName(fullname.text);
       }
       // You may also update custom claims here if needed
 
-      // Signup successful, navigate to the next screen or perform other actions
+      // Signup successful, navigate to the next screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         // Handle weak password error
@@ -48,12 +61,14 @@ class signup extends StatelessWidget {
         print('The account already exists for that email.');
       }
       // Show any other errors
-      print(e.message);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to sign up: ${e.message}'),
+        ),
+      );
     } catch (e) {
       print(e.toString());
     }
-    Get.offAll(MyHomePage());
-    // Get.offAll(Wrapper());
   }
 
   @override
@@ -213,7 +228,7 @@ class signup extends StatelessWidget {
                           padding: EdgeInsets.symmetric(
                               vertical: 36), // Add margin top and bottom
                           child: ElevatedButton(
-                            onPressed: (() => _signup()),
+                            onPressed: (() => _signup(context)),
                             style: ElevatedButton.styleFrom(
                               shape: const StadiumBorder(),
                               minimumSize: Size(double.infinity,

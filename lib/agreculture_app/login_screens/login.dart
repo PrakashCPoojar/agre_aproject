@@ -1,40 +1,86 @@
+import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
+import 'package:flutter/material.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/forgotpassword.dart';
-import 'package:agre_aproject/agreculture_app/login_screens/loginwithemail.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginPage extends StatelessWidget {
-  // const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool light = true;
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
   // Function to handle sign-in
   void signin(BuildContext context) async {
-    // Validate if email and password are not empty
     if (email.text.isEmpty || password.text.isEmpty) {
-      // Show error message if email or password is empty
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter email and password.'),
         ),
       );
-      return; // Stop execution if email or password is empty
+      return;
     }
 
     try {
-      // Sign in with email and password
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email.text,
         password: password.text,
       );
-      // Navigate to the next screen or perform other actions
+
+      // Navigate to Wrapper after successful sign-in
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Wrapper()), // Replace Wrapper() with your actual Wrapper widget
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to sign in. Please check your credentials.'),
+        ),
+      );
+    }
+  }
+
+// Login with google
+  Future<void> loginWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logged in successfully with Google'),
+        ),
+      );
+
+      // Redirect to MyHomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Wrapper()),
+      );
     } catch (e) {
       // Handle sign-in errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to sign in. Please check your credentials.'),
+          content: Text('Failed to sign in with Google: $e'),
         ),
       );
     }
@@ -86,7 +132,6 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _inputField(BuildContext context) {
-    bool light = true;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -157,11 +202,24 @@ class LoginPage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Switch(
-              // This bool value toggles the switch.
-              value: light,
-              activeColor: Color(0xFF779D07),
-              onChanged: (bool value) {},
+            Transform.scale(
+              scale: 0.8, // Adjust the scale factor as needed
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 0), // Add padding horizontally
+                margin:
+                    EdgeInsets.only(left: 0), // Adjust left margin for spacing
+                child: Switch(
+                  // This bool value toggles the switch.
+                  value: light,
+                  activeColor: Color(0xFF779D07),
+                  onChanged: (bool value) {
+                    setState(() {
+                      light = value;
+                    });
+                  },
+                ),
+              ),
             ),
             Container(
               margin:
@@ -181,7 +239,6 @@ class LoginPage extends StatelessWidget {
             ),
           ],
         ),
-        // const SizedBox(height: 2),
         Center(
           child: Padding(
             padding:
@@ -217,22 +274,19 @@ class LoginPage extends StatelessWidget {
             margin:
                 EdgeInsets.symmetric(vertical: 20), // Add margin top and bottom
             child: Text(
-              'Login with social',
+              'Login with Google',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
           ),
         ),
         OutlinedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginWithEmailPage()),
-              );
-            },
-            child: const Text(
-              'Login with email',
-              style: TextStyle(color: Color(0xFF779D07)),
-            )),
+          onPressed: () => loginWithGoogle(
+              context), // Wrap the function call inside a function
+          child: const Text(
+            'Login with Google',
+            style: TextStyle(color: Color(0xFF779D07)),
+          ),
+        ),
       ],
     );
   }
