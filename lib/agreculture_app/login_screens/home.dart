@@ -1,3 +1,4 @@
+import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -194,87 +195,96 @@ class HomePageTab extends StatelessWidget {
 class WeatherWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 160,
-      width: double.infinity,
-      child: Card(
-        margin: EdgeInsets.all(10),
-        color: Colors.transparent, // Set card color to transparent
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: () {
+        // Navigate to another page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WeatherApp()),
+        );
+      },
+      child: Container(
+        height: 160,
+        width: double.infinity,
+        child: Card(
+          margin: EdgeInsets.all(10),
+          color: Colors.transparent, // Set card color to transparent
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/images/weather/weather-bg.jpg'), // Background image path
-              fit: BoxFit.cover,
-            ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/images/weather/weather-bg.jpg'), // Background image path
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Today\'s Weather',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Temperature: 25°C',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        Text(
+                          'Humidity: 60%',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                        Text(
+                          'Wind Speed: 10 km/h',
+                          style: TextStyle(fontSize: 14, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Today\'s Weather',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      Icon(
+                        Icons.wb_cloudy,
+                        size: 72,
+                        color: Colors.grey,
+                      ),
+                      // SizedBox(height: 20),
+                      SizedBox(width: 20),
+                      GestureDetector(
+                        onTap: () {
+                          // Add onPressed action for the refresh icon
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.refresh,
+                              size: 36,
+                              color: Colors.white,
+                            )
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Temperature: 25°C',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      Text(
-                        'Humidity: 60%',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      Text(
-                        'Wind Speed: 10 km/h',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(width: 20),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.wb_cloudy,
-                      size: 72,
-                      color: Colors.grey,
-                    ),
-                    // SizedBox(height: 20),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        // Add onPressed action for the refresh icon
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.refresh,
-                            size: 36,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
