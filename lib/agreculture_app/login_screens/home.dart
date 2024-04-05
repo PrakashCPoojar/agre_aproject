@@ -1,3 +1,4 @@
+import 'package:agre_aproject/agreculture_app/cropsdata.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -108,6 +109,16 @@ class HomePageTab extends StatelessWidget {
                   ),
                 ),
               ),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CropsData()),
+                        );
+                      },
+                      child: Text("Crops data"))),
               HorizontalScrollCard(),
 
               // Fourth Row
