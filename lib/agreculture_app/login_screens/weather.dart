@@ -1,52 +1,79 @@
-import 'package:agre_aproject/agreculture_app/login_screens/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 
-class WeatherApp extends StatefulWidget {
+class WeatherApp extends StatelessWidget {
   const WeatherApp({Key? key}) : super(key: key);
 
   @override
-  State<WeatherApp> createState() => _WeatherAppState();
-}
-
-class _WeatherAppState extends State<WeatherApp> {
-  final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
-
-  Weather? _currentWeather;
-  List<Weather>? _forecast;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchWeatherData();
-  }
-
-  Future<void> _fetchWeatherData() async {
-    _currentWeather = await _wf.currentWeatherByCityName("Bengaluru");
-    _forecast = await _wf.fiveDayForecastByCityName("Bengaluru");
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Weather Information',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Color(0xFF779D07),
-        foregroundColor: Colors.white,
-      ),
-      body: Container(
-        color: Color.fromARGB(255, 209, 224, 250),
-        child: _buildBody(),
-      ),
+    return FutureBuilder<List<dynamic>>(
+      future: _fetchWeatherData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Weather Information',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              backgroundColor: Color(0xFF779D07),
+              foregroundColor: Colors.white,
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          if (snapshot.hasError || snapshot.data == null) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  'Weather Information',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                backgroundColor: Color(0xFF779D07),
+                foregroundColor: Colors.white,
+              ),
+              body: Center(
+                child: Text('Error: Failed to load weather data'),
+              ),
+            );
+          } else {
+            Weather? _currentWeather = snapshot.data![0] as Weather?;
+            List<Weather>? _forecast = snapshot.data![1] as List<Weather>?;
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  'Weather Information',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                backgroundColor: Color(0xFF779D07),
+                foregroundColor: Colors.white,
+              ),
+              body: Container(
+                color: Color.fromARGB(255, 209, 224, 250),
+                child: _buildBody(_currentWeather, _forecast),
+              ),
+            );
+          }
+        }
+      },
     );
   }
 
-  Widget _buildBody() {
+  Future<List<dynamic>> _fetchWeatherData() async {
+    final WeatherFactory _wf =
+        WeatherFactory("81bc43e3e7c43c44ab37010db3794515");
+    Weather currentWeather = await _wf.currentWeatherByCityName("Bengaluru");
+    List<Weather> forecast = await _wf.fiveDayForecastByCityName("Bengaluru");
+    return [currentWeather, forecast];
+  }
+
+  Widget _buildBody(Weather? _currentWeather, List<Weather>? _forecast) {
     if (_currentWeather == null || _forecast == null) {
       return Center(
         child: CircularProgressIndicator(),
@@ -57,9 +84,9 @@ class _WeatherAppState extends State<WeatherApp> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _locationHeader(),
+          _locationHeader(_currentWeather),
           SizedBox(height: 16),
-          _currentWeatherInfo(),
+          _currentWeatherInfo(_currentWeather),
           SizedBox(height: 16),
           Text(
             'Next 5 Days Forecast:',
@@ -70,15 +97,15 @@ class _WeatherAppState extends State<WeatherApp> {
             ),
           ),
           SizedBox(height: 8),
-          _forecastInfo(),
+          _forecastInfo(_forecast),
         ],
       ),
     );
   }
 
-  Widget _locationHeader() {
+  Widget _locationHeader(Weather _currentWeather) {
     return Text(
-      _currentWeather?.areaName ?? "",
+      _currentWeather.areaName ?? "",
       style: TextStyle(
         fontSize: 24,
         // fontWeight: FontWeight.bold,
@@ -88,8 +115,8 @@ class _WeatherAppState extends State<WeatherApp> {
     );
   }
 
-  Widget _currentWeatherInfo() {
-    DateTime now = _currentWeather!.date!;
+  Widget _currentWeatherInfo(Weather _currentWeather) {
+    DateTime now = _currentWeather.date!;
     return Column(
       children: [
         SizedBox(height: 5),
@@ -138,9 +165,9 @@ class _WeatherAppState extends State<WeatherApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _weatherIcon(),
+              _weatherIcon(_currentWeather),
               SizedBox(height: 8),
-              _currentTemp(),
+              _currentTemp(_currentWeather),
             ],
           ),
         ),
@@ -148,17 +175,17 @@ class _WeatherAppState extends State<WeatherApp> {
     );
   }
 
-  Widget _weatherIcon() {
+  Widget _weatherIcon(Weather _currentWeather) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Image.network(
-          "http://openweathermap.org/img/wn/${_currentWeather?.weatherIcon}@2x.png",
+          "http://openweathermap.org/img/wn/${_currentWeather.weatherIcon}@2x.png",
           width: 100,
           height: 100,
         ),
         Text(
-          _currentWeather?.weatherDescription ?? "",
+          _currentWeather.weatherDescription ?? "",
           style: TextStyle(
             fontSize: 20,
             color: Color(0xFF120142),
@@ -168,9 +195,9 @@ class _WeatherAppState extends State<WeatherApp> {
     );
   }
 
-  Widget _currentTemp() {
+  Widget _currentTemp(Weather _currentWeather) {
     return Text(
-      "${_currentWeather?.temperature?.celsius?.toStringAsFixed(0)}° C",
+      "${_currentWeather.temperature?.celsius?.toStringAsFixed(0)}° C",
       style: TextStyle(
         fontSize: 48,
         fontWeight: FontWeight.bold,
@@ -180,7 +207,7 @@ class _WeatherAppState extends State<WeatherApp> {
     );
   }
 
-  Widget _forecastInfo() {
+  Widget _forecastInfo(List<Weather>? _forecast) {
     // Filter out duplicate days
     List<Weather> uniqueForecasts = [];
     for (var forecast in _forecast!) {
