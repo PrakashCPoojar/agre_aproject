@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:agre_aproject/agreculture_app/cropsdata.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agre_aproject/agreculture_app/cropdetailpage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:weather/weather.dart';
 
 void main() {
   runApp(MyApp());
@@ -51,25 +57,39 @@ class HomePageTab extends StatelessWidget {
             children: [
               // First Row
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(8),
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        _showUserProfileDialog(context);
+                    FutureBuilder(
+                      future: _getImageUrl(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        return GestureDetector(
+                          onTap: () {
+                            _showUserProfileDialog(context);
+                          },
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  25), // half of the desired width/height
+                              child: CircleAvatar(
+                                radius: 75,
+                                backgroundImage: snapshot.hasData
+                                    ? NetworkImage(snapshot.data!)
+                                    : AssetImage(
+                                            'assets/images/login/person-profile-icon.png')
+                                        as ImageProvider,
+                              ),
+                            ),
+                          ),
+                        );
                       },
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/login/person-profile-icon.png',
-                          height: 24,
-                          width: 24,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
                     ),
                     SizedBox(width: 10),
                     Text(
-                      '${User!.displayName}',
+                      '${FirebaseAuth.instance.currentUser!.displayName}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -81,9 +101,13 @@ class HomePageTab extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_on, size: 18),
-                        SizedBox(width: 5),
-                        Text('Location'),
+                        Icon(
+                          Icons.location_on,
+                          size: 18,
+                          color: Color(0xFF779D07),
+                        ),
+                        // SizedBox(width: 5),
+                        // Text('Location'),
                       ],
                     ),
                   ],
@@ -109,16 +133,6 @@ class HomePageTab extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => CropsData()),
-                        );
-                      },
-                      child: Text("Crops data"))),
               HorizontalScrollCard(),
 
               // Fourth Row
@@ -149,157 +163,276 @@ class HomePageTab extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Your Profile'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child: Image.asset(
-                  'assets/images/login/person-profile-icon.png',
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              // ClipOval(),
-              SizedBox(height: 10),
-              Text(
-                'Full Name: ${User!.displayName}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 15),
-              Text(
-                'Email: ${User!.email}',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Signout logic here
-                FirebaseAuth.instance.signOut();
-                Navigator.of(context).pop();
-              },
-              child: Text('Sign Out'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class WeatherWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to another page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => WeatherApp()),
-        );
-      },
-      child: Container(
-        height: 160,
-        width: double.infinity,
-        child: Card(
-          margin: EdgeInsets.all(10),
-          color: Colors.transparent, // Set card color to transparent
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/weather/weather-bg.jpg'), // Background image path
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+        return FutureBuilder(
+          future: _getImageUrl(), // Fetch the image URL from Firebase Storage
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            return AlertDialog(
+              title: Text('Your Profile'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  Center(
+                    child: Stack(
                       children: [
-                        Text(
-                          'Today\'s Weather',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        // Display the uploaded profile image or default image
+                        CircleAvatar(
+                          radius: 75,
+                          backgroundImage: snapshot.hasData
+                              ? NetworkImage(snapshot.data!)
+                              : AssetImage(
+                                      'assets/images/login/person-profile-icon.png')
+                                  as ImageProvider,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              _uploadImage(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 30,
+                                color: Colors.blue,
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          'Temperature: 25°C',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        ),
-                        Text(
-                          'Humidity: 60%',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        ),
-                        Text(
-                          'Wind Speed: 10 km/h',
-                          style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: 20),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.wb_cloudy,
-                        size: 72,
-                        color: Colors.grey,
-                      ),
-                      // SizedBox(height: 20),
-                      SizedBox(width: 20),
-                      GestureDetector(
-                        onTap: () {
-                          // Add onPressed action for the refresh icon
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.refresh,
-                              size: 36,
-                              color: Colors.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 10),
+                  Text(
+                    'Full Name: ${FirebaseAuth.instance.currentUser!.displayName}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Email: ${FirebaseAuth.instance.currentUser!.email}',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Sign Out'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+// Function to get the image URL from Firebase Storage
+  Future<String> _getImageUrl() async {
+    String imageUrl = ''; // Default empty URL
+
+    // Fetch the image URL from Firebase Storage based on user's UID
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+    imageUrl = await storageReference.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  void _uploadImage(BuildContext context) async {
+    final _picker = ImagePicker();
+    XFile? image;
+
+    // Pick an image from gallery
+    image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Upload image to Firebase Storage
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+      UploadTask uploadTask = storageReference.putFile(File(image.path));
+
+      // Get download URL
+      await uploadTask.whenComplete(() async {
+        String imageUrl = await storageReference.getDownloadURL();
+
+        // Update user profile image URL in Firestore or Realtime Database
+        // Example:
+        // await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
+        //   'profileImageUrl': imageUrl,
+        // });
+        // or
+        // await FirebaseDatabase.instance.reference().child('users/${FirebaseAuth.instance.currentUser!.uid}/profileImageUrl').set(imageUrl);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Image uploaded successfully.'),
+        ));
+      }).catchError((error) {
+        // Handle upload errors
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to upload image: $error'),
+        ));
+      });
+    }
+  }
+}
+
+class WeatherWidget extends StatelessWidget {
+  Future<List<Weather>> _fetchWeatherData() async {
+    WeatherFactory wf = WeatherFactory("81bc43e3e7c43c44ab37010db3794515");
+    List<Weather> forecasts = await wf.fiveDayForecastByCityName("Mangalore");
+    return forecasts;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Weather>>(
+      future: _fetchWeatherData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final List<Weather> forecasts = snapshot.data!;
+          final Weather currentWeather = forecasts[0];
+
+          return GestureDetector(
+            onTap: () {
+              // Navigate to another page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WeatherApp()),
+              );
+            },
+            child: Container(
+              height: 180,
+              width: double.infinity,
+              child: Card(
+                margin: EdgeInsets.all(10),
+                color: Colors.transparent, // Set card color to transparent
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/weather/weather-bg.png'), // Background image path
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                currentWeather.weatherDescription ?? "",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              // SizedBox(height: 0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Image.network(
+                                      "http://openweathermap.org/img/wn/${currentWeather.weatherIcon}@2x.png",
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${currentWeather.areaName}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                '${currentWeather.temperature?.celsius?.toStringAsFixed(0)}° C',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      const Color.fromRGBO(56, 234, 255, 100),
+                                ),
+                              ),
+                              Text(
+                                'Humidity: ${currentWeather.humidity}%',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                'Wind Speed: ${currentWeather.windSpeed} km/h',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

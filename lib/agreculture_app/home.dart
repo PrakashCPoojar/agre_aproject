@@ -1,4 +1,4 @@
-import 'package:agre_aproject/agreculture_app/login_screens/home.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/homepagecontent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:agre_aproject/agreculture_app/homepagetab.dart';
@@ -82,14 +82,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Color(0xFF779D07),
                       BlendMode.srcIn,
                     ),
-                    child: SvgPicture.asset(
-                      'assets/icons/home_filled.svg',
+                    child: SvgPicture.network(
+                      'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fhome_filled.svg?alt=media&token=2e0bac97-f0b1-42ea-b3c7-c25fb6420c7e',
                       width: 24,
                       height: 24,
                     ),
                   )
-                : SvgPicture.asset(
-                    'assets/icons/home.svg',
+                : SvgPicture.network(
+                    'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fhome.svg?alt=media&token=4278e354-e40d-4130-a218-74201d9379a8',
                     width: 24,
                     height: 24,
                   ),
@@ -102,14 +102,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Color(0xFF779D07),
                       BlendMode.srcIn,
                     ),
-                    child: SvgPicture.asset(
-                      'assets/icons/soil_filled.svg',
+                    child: SvgPicture.network(
+                      'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fsoil_filled.svg?alt=media&token=559bc644-881b-4123-8557-460aa9796a6e',
                       width: 24,
                       height: 24,
                     ),
                   )
-                : SvgPicture.asset(
-                    'assets/icons/soil.svg',
+                : SvgPicture.network(
+                    'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fsoil.svg?alt=media&token=99570662-47b5-4711-83d0-3cb2a02c5b8c',
                     width: 24,
                     height: 24,
                   ),
@@ -122,14 +122,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Color(0xFF779D07),
                       BlendMode.srcIn,
                     ),
-                    child: SvgPicture.asset(
-                      'assets/icons/crop_filled.svg',
+                    child: SvgPicture.network(
+                      'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fcrop_filled.svg?alt=media&token=2c31d6b4-00e7-4056-8add-3840fda05b04',
                       width: 24,
                       height: 24,
                     ),
                   )
-                : SvgPicture.asset(
-                    'assets/icons/crop.svg',
+                : SvgPicture.network(
+                    'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fcrop.svg?alt=media&token=c4c46bcc-a196-4177-9b8c-65b1bde97cc7',
                     width: 24,
                     height: 24,
                   ),
@@ -142,14 +142,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Color(0xFF779D07),
                       BlendMode.srcIn,
                     ),
-                    child: SvgPicture.asset(
-                      'assets/icons/newspaper-icon.svg',
+                    child: SvgPicture.network(
+                      'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fnewspaper-icon.svg?alt=media&token=8cd171fc-b441-405d-8cc3-05460a2916c4',
                       width: 24,
                       height: 24,
                     ),
                   )
-                : SvgPicture.asset(
-                    'assets/icons/newspaper-icon.svg',
+                : SvgPicture.network(
+                    'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Fnewspaper-icon.svg?alt=media&token=8cd171fc-b441-405d-8cc3-05460a2916c4',
                     width: 24,
                     height: 24,
                   ),
@@ -162,14 +162,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Color(0xFF779D07),
                       BlendMode.srcIn,
                     ),
-                    child: SvgPicture.asset(
-                      'assets/icons/tool_filled.svg',
+                    child: SvgPicture.network(
+                      'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Ftool_filled.svg?alt=media&token=1a50d557-7f04-4e1f-a3a6-0259a3139033',
                       width: 24,
                       height: 24,
                     ),
                   )
-                : SvgPicture.asset(
-                    'assets/icons/tool.svg',
+                : SvgPicture.network(
+                    'https://firebasestorage.googleapis.com/v0/b/final-sem-project-93001.appspot.com/o/icons%2Ftool.svg?alt=media&token=bce3faf8-bc5a-4f23-a555-2d6f69441f80',
                     width: 24,
                     height: 24,
                   ),

@@ -1,4 +1,4 @@
-import 'package:agre_aproject/agreculture_app/homecontent.dart';
+import 'package:agre_aproject/agreculture_app/home.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/login.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/termsandcondition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
