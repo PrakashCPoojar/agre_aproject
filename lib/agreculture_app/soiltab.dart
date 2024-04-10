@@ -1,8 +1,20 @@
-import 'package:agre_aproject/agreculture_app/soildetailpage.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-void main() {
-  runApp(MyApp());
+import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:weather/weather.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(HomesoilTab());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,313 +31,572 @@ class MyApp extends StatelessWidget {
 }
 
 class HomesoilTab extends StatelessWidget {
+  final User = FirebaseAuth.instance.currentUser;
+
+  void signout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      // Navigate to the Wrapper page after sign-out
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Wrapper()),
+      );
+    } catch (e) {
+      print('Failed to sign out: $e');
+      // Handle sign-out failure here, if needed
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 32.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // First Row
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  children: [
-                    // Left section
-                    ClipOval(
-                      child: Image.asset(
-                        'assets/images/login/person-profile-icon.png',
-                        height: 24,
-                        width: 24,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'User\'s Name',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(), // Added Spacer widget
-
-                    // Right section
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
+          color: Color(0xFFF2F2F2),
+          // Background color for the entire page
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // First Row
+                SizedBox(height: 50, child: Container(color: Colors.green)),
+                SizedBox(
+                  height: 50,
+                  child: Container(
+                    height: 50,
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
                       children: [
-                        Icon(Icons.location_on, size: 18),
-                        SizedBox(width: 5),
-                        Text('Location'),
+                        FutureBuilder(
+                          future: _getImageUrl(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            return GestureDetector(
+                              onTap: () {
+                                _showUserProfileDialog(context);
+                              },
+                              child: Container(
+                                width: 32,
+                                height: 32,
+                                child: ClipRRect(
+                                  // half of the desired width/height
+                                  child: CircleAvatar(
+                                    radius: 75,
+                                    backgroundImage: snapshot.hasData
+                                        ? NetworkImage(snapshot.data!)
+                                        : AssetImage(
+                                                'assets/images/login/person-profile-icon.png')
+                                            as ImageProvider,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          '${FirebaseAuth.instance.currentUser!.displayName}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(), // Added Spacer widget
+
+                        // Right section
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 18,
+                              color: Color(0xFF779D07),
+                            ),
+                            // SizedBox(width: 5),
+                            // Text('Location'),
+                          ],
+                        ),
                       ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Second Row
-              WeatherWidget(),
-
-              // Fourth Row
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Padding(
-                  padding:
-                      EdgeInsets.all(8.0), // Add padding around the Text widget
-                  child: Text(
-                    'Soil',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black, // Set the text color to green
                     ),
                   ),
                 ),
-              ),
-              VerticalCard(),
-            ],
+                SizedBox(
+                  height: 200,
+                  child: Container(
+                    height: 200,
+                    margin: EdgeInsets.zero,
+                    child: WeatherWidget(),
+                  ),
+                ),
+
+                SizedBox(
+                  height: 535,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 535,
+                        child: SoilData(),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _showUserProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder(
+          future: _getImageUrl(), // Fetch the image URL from Firebase Storage
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            return AlertDialog(
+              title: Text('Your Profile'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Stack(
+                      children: [
+                        // Display the uploaded profile image or default image
+                        CircleAvatar(
+                          radius: 75,
+                          backgroundImage: snapshot.hasData
+                              ? NetworkImage(snapshot.data!)
+                              : AssetImage(
+                                      'assets/images/login/person-profile-icon.png')
+                                  as ImageProvider,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              _uploadImage(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 30,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Full Name: ${FirebaseAuth.instance.currentUser!.displayName}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Email: ${FirebaseAuth.instance.currentUser!.email}',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Sign Out'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+// Function to get the image URL from Firebase Storage
+  Future<String> _getImageUrl() async {
+    String imageUrl = ''; // Default empty URL
+
+    // Fetch the image URL from Firebase Storage based on user's UID
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+    imageUrl = await storageReference.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  void _uploadImage(BuildContext context) async {
+    final _picker = ImagePicker();
+    XFile? image;
+
+    // Pick an image from gallery
+    image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Upload image to Firebase Storage
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+      UploadTask uploadTask = storageReference.putFile(File(image.path));
+
+      // Get download URL
+      await uploadTask.whenComplete(() async {
+        String imageUrl = await storageReference.getDownloadURL();
+
+        // Update user profile image URL in Firestore or Realtime Database
+        // Example:
+        // await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
+        //   'profileImageUrl': imageUrl,
+        // });
+        // or
+        // await FirebaseDatabase.instance.reference().child('users/${FirebaseAuth.instance.currentUser!.uid}/profileImageUrl').set(imageUrl);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Image uploaded successfully.'),
+        ));
+      }).catchError((error) {
+        // Handle upload errors
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to upload image: $error'),
+        ));
+      });
+    }
   }
 }
 
 class WeatherWidget extends StatelessWidget {
+  Future<List<Weather>> _fetchWeatherData() async {
+    WeatherFactory wf = WeatherFactory("81bc43e3e7c43c44ab37010db3794515");
+    List<Weather> forecasts = await wf.fiveDayForecastByCityName("Bengaluru");
+    return forecasts;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 160,
-      width: double.infinity,
-      child: Card(
-        margin: EdgeInsets.all(10),
-        color: Colors.transparent, // Set card color to transparent
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/images/weather/weather-bg.jpg'), // Background image path
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Today\'s Weather',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+    return FutureBuilder<List<Weather>>(
+      future: _fetchWeatherData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final List<Weather> forecasts = snapshot.data!;
+          final Weather currentWeather = forecasts[0];
+
+          return GestureDetector(
+            onTap: () {
+              // Navigate to another page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WeatherApp()),
+              );
+            },
+            child: Container(
+              height: 180,
+              width: double.infinity,
+              child: Card(
+                margin: EdgeInsets.all(10),
+                color: Colors.transparent, // Set card color to transparent
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/weather/weather-bg.png'), // Background image path
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                currentWeather.weatherDescription ?? "",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              // SizedBox(height: 0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Image.network(
+                                      "http://openweathermap.org/img/wn/${currentWeather.weatherIcon}@2x.png",
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Temperature: 25°C',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      Text(
-                        'Humidity: 60%',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      Text(
-                        'Wind Speed: 10 km/h',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                    ],
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${currentWeather.areaName}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                '${currentWeather.temperature?.celsius?.toStringAsFixed(0)}° C',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      const Color.fromRGBO(56, 234, 255, 100),
+                                ),
+                              ),
+                              Text(
+                                'Humidity: ${currentWeather.humidity}%',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                'Wind Speed: ${currentWeather.windSpeed} km/h',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(width: 20),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.wb_cloudy,
-                      size: 72,
-                      color: Colors.grey,
-                    ),
-                    // SizedBox(height: 20),
-                    SizedBox(width: 20),
-                    GestureDetector(
-                      onTap: () {
-                        // Add onPressed action for the refresh icon
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.refresh,
-                            size: 36,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
+          );
+        }
+      },
+    );
+  }
+}
+
+class SoilData extends StatelessWidget {
+  SoilData({Key? key});
+  final ref = FirebaseDatabase.instance.ref("soil");
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Soil'), // Set the title of the app bar
+      ),
+      body: Column(
+        children: [
+          Container(
+            child: Expanded(
+              child: FirebaseAnimatedList(
+                query: ref,
+                itemBuilder: (context, snapshot, animation, index) {
+                  return CropCard(
+                    name: snapshot.child("name").value.toString(),
+                    description: snapshot.child("description").value.toString(),
+                    imageUrl: snapshot.child("image").value.toString(),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewMorePage(
+                            name: snapshot.child("name").value.toString(),
+                            description:
+                                snapshot.child("description").value.toString(),
+                            imageUrl: snapshot.child("image").value.toString(),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CropCard extends StatelessWidget {
+  final String name;
+  final String description;
+  final String imageUrl;
+  final VoidCallback onPressed;
+
+  const CropCard({
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            // Left side: Image (30% width)
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: 150,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            // Right side: Name, Description, and Button (70% width)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  // Description
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 16),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+                  // Button aligned to the right
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: onPressed,
+                      child: Text('View More'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class VerticalCard extends StatelessWidget {
-  // List of image asset paths
-  final List<String> imageAssetPaths = [
-    'assets/images/soil/black.jpg',
-    'assets/images/soil/red.jpg',
-    'assets/images/soil/forest-soil.jpg',
-    'assets/images/soil/coastal.jpg',
-    'assets/images/soil/Gardening.webp',
-  ];
+class ViewMorePage extends StatelessWidget {
+  final String name;
+  final String description;
+  final String imageUrl;
 
-  final List<String> marketpricetitle = [
-    'Black soil',
-    'Red soil',
-    'Forest soil',
-    'Coastal soil',
-    'Gardening soil',
-  ];
-
-  final List<String> marketpricedescription = [
-    'Because of their high fertility and retentivity of moisture, the black soil is widely used for producing several important crops. Some of the major crops grown on the black soils are cotton, wheat, jowar, linseed, castor, sunflower and millets',
-    'The lowermost area of red soil is dark in color and very fertile, while the upper layer is sandy and porous. Thus, proper use of fertilizers and irrigation yields high production of cotton, wheat, rice, pulses, millets, tobacco, oil seeds, potatoes, and fruits.',
-    'These soils are heterogeneous in nature, with different characteristics depending on the mountainous environment and altitude. (ii) The soils are high in humus but low in potash, phosphorus, and lime. (iii) The soils are particularly suited to the cultivation of tea and coffee, spices and fruits.',
-    'Coastal alluvium soils are of marine origin and are seen along the coastal plains and basin lands as a narrow strip. Alluvium soils are formed from fluvial sediments of lacustrine or riverine sediments. Forest soils are seen under forest cover and are formed from crystalline rocks of Archaean age.',
-    'Coastal alluvium soils are of marine origin and are seen along the coastal plains and basin lands as a narrow strip. Alluvium soils are formed from fluvial sediments of lacustrine or riverine sediments. Forest soils are seen under forest cover and are formed from crystalline rocks of Archaean age.',
-  ];
+  const ViewMorePage({
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.all(10),
-      itemCount: imageAssetPaths.length,
-      itemBuilder: (context, index) {
-        return SizedBox(
-          height: 150, // Set the height of the card
-          child: Card(
-            margin: EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                // Left side image
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: double.infinity,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                    ),
-                    child: Image.asset(
-                      imageAssetPaths[index], // Load image from local assets
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                // Middle section
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Indian Price Tag
-                        Row(
-                          children: [
-                            // Title
-                            Text(
-                              marketpricetitle[index],
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: double
-                              .infinity, // Ensure the text takes the available width
-                          child: Text(
-                            marketpricedescription[index],
-                            style: TextStyle(
-                              fontSize: 14,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 4,
-                            textAlign: TextAlign.justify, // Maximum lines
-                            overflow: TextOverflow
-                                .ellipsis, // Ellipsis when exceeding max lines
-                          ),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Spacer(),
-                            SizedBox(
-                              height: 22, // Specify the height of the button
-                              width: 80, // Specify the width of the button
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SoilPage()),
-                                  );
-                                  // Add onPressed action for the button
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 0,
-                                    vertical: 0,
-                                  ), // Adjust vertical padding to make the button smaller
-                                  textStyle: TextStyle(
-                                    fontSize: 12,
-                                  ), // Adjust font size to make the text smaller
-                                ),
-                                child: Text(
-                                  'Read More',
-                                  style: TextStyle(
-                                    fontSize:
-                                        12.0, // Adjust font size to match the button
-                                    // fontWeight: FontWeight.bold,
-                                    color: Colors
-                                        .white, // Set the text color to black
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('View More'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                imageUrl,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        );
-      },
+            SizedBox(height: 16),
+            // Title
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            // Description
+            Text(
+              description,
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

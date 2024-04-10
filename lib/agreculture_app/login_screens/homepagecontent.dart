@@ -1,15 +1,21 @@
 import 'dart:io';
 
 import 'package:agre_aproject/agreculture_app/cropsdata.dart';
+import 'package:agre_aproject/agreculture_app/farmerslist.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/testing.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agre_aproject/agreculture_app/cropdetailpage.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather/weather.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,13 +55,14 @@ class HomePageTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 48.0),
+      body: Container(
+        color: Color(0xFFF2F2F2), // Background color for the entire page
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // First Row
+              SizedBox(height: 50, child: Container(color: Colors.green)),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Row(
@@ -69,8 +76,8 @@ class HomePageTab extends StatelessWidget {
                             _showUserProfileDialog(context);
                           },
                           child: Container(
-                            width: 48,
-                            height: 48,
+                            width: 32,
+                            height: 32,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(
                                   25), // half of the desired width/height
@@ -133,6 +140,23 @@ class HomePageTab extends StatelessWidget {
                   ),
                 ),
               ),
+              Container(
+                margin:
+                    EdgeInsets.only(left: 8), // Adjust left margin for spacing
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MarketDataPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Testing",
+                    style: TextStyle(color: Color(0xFF779D07)),
+                  ),
+                ),
+              ),
+
               HorizontalScrollCard(),
 
               // Fourth Row
@@ -151,6 +175,7 @@ class HomePageTab extends StatelessWidget {
                   ),
                 ),
               ),
+
               VerticalCard(),
             ],
           ),
@@ -303,7 +328,7 @@ class HomePageTab extends StatelessWidget {
 class WeatherWidget extends StatelessWidget {
   Future<List<Weather>> _fetchWeatherData() async {
     WeatherFactory wf = WeatherFactory("81bc43e3e7c43c44ab37010db3794515");
-    List<Weather> forecasts = await wf.fiveDayForecastByCityName("Mangalore");
+    List<Weather> forecasts = await wf.fiveDayForecastByCityName("Bengaluru");
     return forecasts;
   }
 
@@ -489,7 +514,6 @@ class HorizontalScrollCard extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: 5,
-            // borderRadius: BorderRadius.circular(8),
             itemBuilder: (context, index) {
               return Container(
                 width: 170,
@@ -507,7 +531,7 @@ class HorizontalScrollCard extends StatelessWidget {
                           topRight: Radius.circular(8.0),
                         ),
                         child: Image.asset(
-                          imageUrls[index], // Load image from local assets
+                          imageUrls[index],
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -527,11 +551,11 @@ class HorizontalScrollCard extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Container(
-                        height: 60, // Adjust the height as needed
+                        height: 60,
                         child: Text(
                           blogdescriptions[index],
                           style: TextStyle(fontSize: 14),
-                          maxLines: 4,
+                          maxLines: 5,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.justify,
                         ),
@@ -539,34 +563,31 @@ class HorizontalScrollCard extends StatelessWidget {
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      width: double
-                          .infinity, // Set width to 100% of the available space
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CropsPage()),
-                          );
-                          // Add onPressed action for the button
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical:
-                                  2), // Adjust vertical padding to make the button smaller
-                          textStyle: TextStyle(
-                              fontSize:
-                                  12), // Adjust font size to make the text smaller
-                        ),
-                        child: Text(
-                          'Read More',
-                          style: TextStyle(
-                            fontSize:
-                                12.0, // Adjust font size to match the button
-                            // fontWeight: FontWeight.bold,
-                            color: Colors.white, // Set the text color to black
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                  title: blogtitles[index],
+                                  description: blogdescriptions[index],
+                                  imageUrl: imageUrls[index],
+                                ),
+                              ),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                          ),
+                          child: Text(
+                            "Read More",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Theme.of(context).primaryColor,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
                       ),
@@ -708,5 +729,400 @@ class VerticalCard extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class DetailPage extends StatelessWidget {
+  final String title;
+  final String description;
+  final String imageUrl;
+
+  const DetailPage({
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 50, child: Container(color: Colors.green)),
+            Container(
+              height: 50,
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  FutureBuilder(
+                    future: _getImageUrl(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      return GestureDetector(
+                        onTap: () {
+                          _showUserProfileDialog(context);
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: CircleAvatar(
+                              radius: 75,
+                              backgroundImage: snapshot.hasData
+                                  ? NetworkImage(snapshot.data!)
+                                  : AssetImage(
+                                          'assets/images/login/person-profile-icon.png')
+                                      as ImageProvider<Object>,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    '${FirebaseAuth.instance.currentUser!.displayName}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 18,
+                        color: Color(0xFF779D07),
+                      ),
+                      // SizedBox(width: 5),
+                      // Text('Location'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 200,
+              child: WeatherWidget(),
+            ),
+            Container(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Image with title and description
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              description,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Add spacing between image and video
+                  // YouTube video
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(8.0),
+              height: 180,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Fertilisers",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildClickableImage(
+                        imageUrl: 'assets/images/Fertilisers/batha-1.jpg',
+                        text: 'Paddy',
+                        url:
+                            'https://www.amazon.in/Agrinex-Eco-Friendly-Organic-Multi-Nutrient-Promoter/dp/B07BHQQL7L',
+                      ),
+                      _buildClickableImage(
+                        imageUrl: 'assets/images/Fertilisers/batha.jpg',
+                        text: 'NUTRI-RICE',
+                        url: 'https://excelag.com/nutririce-efficacy-rice/',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Related Videos",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    YoutubePlayer(
+                      controller: YoutubePlayerController(
+                        initialVideoId: 'KNQdCc62-GA',
+                        flags: YoutubePlayerFlags(
+                          autoPlay: false,
+                          mute: false,
+                        ),
+                      ),
+                      showVideoProgressIndicator: true,
+                      progressIndicatorColor: Colors.amber,
+                      progressColors: ProgressBarColors(
+                        playedColor: Colors.amber,
+                        handleColor: Colors.amberAccent,
+                      ),
+                      onReady: () {
+                        print('Player is ready.');
+                      },
+                    ),
+                  ],
+                )),
+            Container(
+              // height: 52, // Adjust height as needed
+              padding: EdgeInsets.symmetric(
+                  vertical: 20), // Adjust vertical padding as needed
+              // Button
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FarmersList()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                  ),
+                  child: Text(
+                    'Talk to Experts',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClickableImage({
+    required String imageUrl,
+    required String text,
+    required String url,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        _launchURL(url);
+      },
+      child: Column(
+        children: [
+          Image.asset(
+            imageUrl,
+            height: 100, // Adjust as needed
+            width: 100, // Adjust as needed
+          ),
+          SizedBox(height: 5),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void _showUserProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder(
+          future: _getImageUrl(), // Fetch the image URL from Firebase Storage
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            return AlertDialog(
+              title: Text('Your Profile'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Stack(
+                      children: [
+                        // Display the uploaded profile image or default image
+                        CircleAvatar(
+                          radius: 75,
+                          backgroundImage: snapshot.hasData
+                              ? NetworkImage(snapshot.data!)
+                              : AssetImage(
+                                      'assets/images/login/person-profile-icon.png')
+                                  as ImageProvider<Object>,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              _uploadImage(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 30,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Full Name: ${FirebaseAuth.instance.currentUser!.displayName}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Email: ${FirebaseAuth.instance.currentUser!.email}',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Sign Out'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Function to get the image URL from Firebase Storage
+  Future<String> _getImageUrl() async {
+    String imageUrl = ''; // Default empty URL
+
+    // Fetch the image URL from Firebase Storage based on user's UID
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+    imageUrl = await storageReference.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  void _uploadImage(BuildContext context) async {
+    final _picker = ImagePicker();
+    XFile? image;
+
+    // Pick an image from gallery
+    image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Upload image to Firebase Storage
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+      UploadTask uploadTask = storageReference.putFile(File(image.path));
+
+      // Get download URL
+      await uploadTask.whenComplete(() async {
+        String imageUrl = await storageReference.getDownloadURL();
+
+        // Update user profile image URL in Firestore or Realtime Database
+        // Example:
+        // await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
+        //   'profileImageUrl': imageUrl,
+        // });
+        // or
+        // await FirebaseDatabase.instance.reference().child('users/${FirebaseAuth.instance.currentUser!.uid}/profileImageUrl').set(imageUrl);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Image uploaded successfully.'),
+        ));
+      }).catchError((error) {
+        // Handle upload errors
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to upload image: $error'),
+        ));
+      });
+    }
   }
 }
