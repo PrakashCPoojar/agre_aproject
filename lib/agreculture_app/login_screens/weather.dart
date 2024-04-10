@@ -7,262 +7,253 @@ class WeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: _fetchWeatherData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Weather Information',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              backgroundColor: Color(0xFF779D07),
-              foregroundColor: Colors.white,
-            ),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else {
-          if (snapshot.hasError || snapshot.data == null) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'Weather Information',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                backgroundColor: Color(0xFF779D07),
-                foregroundColor: Colors.white,
-              ),
-              body: Center(
-                child: Text('Error: Failed to load weather data'),
-              ),
-            );
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          'Weather Information',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF2F4F66),
+      ),
+      body: FutureBuilder<List<dynamic>>(
+        future: _fetchWeatherData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
           } else {
-            Weather? _currentWeather = snapshot.data![0] as Weather?;
-            List<Weather>? _forecast = snapshot.data![1] as List<Weather>?;
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'Weather Information',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                backgroundColor: Color(0xFF779D07),
-                foregroundColor: Colors.white,
-              ),
-              body: Container(
-                color: Color.fromARGB(255, 209, 224, 250),
-                child: _buildBody(_currentWeather, _forecast),
-              ),
-            );
+            if (snapshot.hasError || snapshot.data == null) {
+              return Center(child: Text('Error: Failed to load weather data'));
+            } else {
+              Weather? currentWeather = snapshot.data![0] as Weather?;
+              List<Weather>? forecast = snapshot.data![1] as List<Weather>?;
+              return _buildWeatherUI(context, currentWeather, forecast);
+            }
           }
-        }
-      },
+        },
+      ),
     );
   }
 
   Future<List<dynamic>> _fetchWeatherData() async {
-    final WeatherFactory _wf =
+    final WeatherFactory wf =
         WeatherFactory("81bc43e3e7c43c44ab37010db3794515");
-    Weather currentWeather = await _wf.currentWeatherByCityName("Bengaluru");
-    List<Weather> forecast = await _wf.fiveDayForecastByCityName("Bengaluru");
+    Weather currentWeather = await wf.currentWeatherByCityName("Bengaluru");
+    List<Weather> forecast = await wf.fiveDayForecastByCityName("Bengaluru");
     return [currentWeather, forecast];
   }
 
-  Widget _buildBody(Weather? _currentWeather, List<Weather>? _forecast) {
-    if (_currentWeather == null || _forecast == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+  Widget _buildWeatherUI(
+      BuildContext context, Weather? currentWeather, List<Weather>? forecast) {
+    if (currentWeather == null || forecast == null) {
+      return Center(child: CircularProgressIndicator());
     }
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _locationHeader(_currentWeather),
-          SizedBox(height: 16),
-          _currentWeatherInfo(_currentWeather),
-          SizedBox(height: 16),
-          Text(
-            'Next 5 Days Forecast:',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF120142),
-            ),
-          ),
-          SizedBox(height: 8),
-          _forecastInfo(_forecast),
+          _currentWeatherHeader(currentWeather),
+          _currentWeatherDetails(currentWeather),
+          _forecastHeader(),
+          _forecastList(forecast),
         ],
       ),
     );
   }
 
-  Widget _locationHeader(Weather _currentWeather) {
-    return Text(
-      _currentWeather.areaName ?? "",
-      style: TextStyle(
-        fontSize: 24,
-        // fontWeight: FontWeight.bold,
-        color: Color(0xFF120142),
+  Widget _currentWeatherHeader(Weather currentWeather) {
+    return Container(
+      color: Color(0xFF2F4F66),
+      padding: EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            currentWeather.areaName ?? "",
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            DateFormat("EEEE, MMM d").format(currentWeather.date!),
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 16),
+          Text(
+            currentWeather.weatherDescription ?? "",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 8),
+          Image.network(
+            "http://openweathermap.org/img/wn/${currentWeather.weatherIcon}@2x.png",
+            width: 100,
+            height: 100,
+          ),
+          SizedBox(height: 8),
+          Text(
+            "${currentWeather.temperature?.celsius?.toStringAsFixed(0)}° C",
+            style: TextStyle(
+              fontSize: 48,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
-      textAlign: TextAlign.center,
     );
   }
 
-  Widget _currentWeatherInfo(Weather _currentWeather) {
-    DateTime now = _currentWeather.date!;
-    return Column(
-      children: [
-        SizedBox(height: 5),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "  ${DateFormat("MMM d, ").format(now)}",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                // color: Color(0xFF779D07),
-              ),
-            ),
-            Text(
-              DateFormat("EEEE").format(now),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF120142),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 16),
-        Container(
-          width: 250, // Adjust the width as needed
-          height: 250, // Adjust the height as needed
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color.fromARGB(255, 58, 88, 224), // Circle background color
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/images/weather/weather-bg.jpg'), // Replace 'assets/background_image.jpg' with your image asset path
-              fit: BoxFit.cover, // Adjust the fit as needed
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _weatherIcon(_currentWeather),
-              SizedBox(height: 8),
-              _currentTemp(_currentWeather),
-            ],
-          ),
-        ),
-      ],
+  Widget _currentWeatherDetails(Weather currentWeather) {
+    return Container(
+      color: Color(0xFFE4E6EB),
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _detailItem("Humidity", "${currentWeather.humidity}%"),
+          _detailItem("Wind Speed", "${currentWeather.windSpeed} km/h"),
+          _detailItem("Pressure", "${currentWeather.pressure} hPa"),
+        ],
+      ),
     );
   }
 
-  Widget _weatherIcon(Weather _currentWeather) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+  Widget _detailItem(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.network(
-          "http://openweathermap.org/img/wn/${_currentWeather.weatherIcon}@2x.png",
-          width: 100,
-          height: 100,
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
-          _currentWeather.weatherDescription ?? "",
+          value,
           style: TextStyle(
-            fontSize: 20,
-            color: Color(0xFF120142),
+            fontSize: 16,
           ),
         ),
       ],
     );
   }
 
-  Widget _currentTemp(Weather _currentWeather) {
-    return Text(
-      "${_currentWeather.temperature?.celsius?.toStringAsFixed(0)}° C",
-      style: TextStyle(
-        fontSize: 48,
-        fontWeight: FontWeight.bold,
-        color: Color(0xFF120142),
+  Widget _forecastHeader() {
+    return Container(
+      color: Color(0xFF2F4F66),
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      child: Text(
+        "Next 5 Days Forecast",
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
-      textAlign: TextAlign.center,
     );
   }
 
-  Widget _forecastInfo(List<Weather>? _forecast) {
-    // Filter out duplicate days
-    List<Weather> uniqueForecasts = [];
-    for (var forecast in _forecast!) {
-      if (!uniqueForecasts
-          .any((element) => element.date?.day == forecast.date?.day)) {
-        uniqueForecasts.add(forecast);
+  Widget _forecastList(List<Weather> forecast) {
+    // Group forecast by day
+    Map<DateTime, List<Weather>> groupedForecast = {};
+    forecast.forEach((item) {
+      DateTime date = item.date!;
+      DateTime day = DateTime(date.year, date.month, date.day);
+      if (!groupedForecast.containsKey(day)) {
+        groupedForecast[day] = [];
       }
-    }
+      groupedForecast[day]!.add(item);
+    });
 
-    return Container(
-      height: 150, // Adjust the height as needed
-      // color: Color(0xFFECF3FE), // Background color
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: uniqueForecasts.length,
-        itemBuilder: (context, index) {
-          Weather forecast = uniqueForecasts[index];
-          return Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Card(
-              elevation: 3,
-              color: Colors.white, // Card background color
-              child: Container(
-                width: 100, // Adjust the width of each card as needed
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      DateFormat("EEEE").format(forecast.date!),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF120142),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "${forecast.temperature?.celsius?.toStringAsFixed(0)}° C",
-                      style: TextStyle(
-                        color: Color(0xFF120142),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      forecast.weatherDescription ?? "",
-                      style: TextStyle(
-                        color: Color(0xFF120142),
-                      ),
-                    ),
-                  ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: groupedForecast.entries.map((entry) {
+          DateTime day = entry.key;
+          List<Weather> forecasts = entry.value;
+          Weather firstForecast = forecasts.first;
+
+          return Container(
+            margin: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color:
+                  Color(0xFF2F4F66), // Set your desired background color here
+              borderRadius:
+                  BorderRadius.circular(12), // Optional: Add border radius
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // changes position of shadow
                 ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    DateFormat("EEEE, MMM d").format(day),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.white, // Set text color to white
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Image.network(
+                        "http://openweathermap.org/img/wn/${firstForecast.weatherIcon}@2x.png",
+                        width: 50,
+                        height: 50,
+                      ),
+                      SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            firstForecast.weatherDescription ?? "",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white), // Set text color to white
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "${firstForecast.temperature?.celsius?.toStringAsFixed(0)}° C",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white), // Set text color to white
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  if (forecasts.length > 1)
+                    Text(
+                      "and ${forecasts.length - 1} more...",
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white), // Set text color to white
+                    ),
+                ],
               ),
             ),
           );
-        },
+        }).toList(),
       ),
     );
   }

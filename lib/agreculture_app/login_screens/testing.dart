@@ -1,135 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' as parser;
 
 void main() {
-  runApp(TestingApp());
+  runApp(MyApp());
 }
 
-class TestingApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Horizontal Scroll Cards Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Horizontal Scroll Cards Demo'),
+          title: Text('Web Scraping Example'),
         ),
-        body: HorizontalScrollCards(),
+        body: MarketDataPage(),
       ),
     );
   }
 }
 
-class HorizontalScrollCards extends StatelessWidget {
+class MarketDataPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10, // Replace this with your desired number of cards
-        itemBuilder: (context, index) {
-          return HorizontalCard(
-            title: 'Title $index',
-            description: 'Description $index',
-          );
-        },
-      ),
-    );
-  }
+  _MarketDataPageState createState() => _MarketDataPageState();
 }
 
-class HorizontalCard extends StatelessWidget {
-  final String title;
-  final String description;
-
-  HorizontalCard({required this.title, required this.description});
+class _MarketDataPageState extends State<MarketDataPage> {
+  String marketData = '';
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  DetailsPage(title: title, description: description),
-            ),
-          );
-        },
-        child: Container(
-          width: 200,
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                description,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 8.0),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DetailsPage(title: title, description: description),
-                    ),
-                  );
-                },
-                child: Text('View Details'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+    fetchMarketData();
   }
-}
 
-class DetailsPage extends StatelessWidget {
-  final String title;
-  final String description;
-
-  DetailsPage({required this.title, required this.description});
+  Future<void> fetchMarketData() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://www.napanta.com/market-trend/karnataka/haveri/haveri/cotton/gch#google_vignette'));
+      if (response.statusCode == 200) {
+        final document = parser.parse(response.body);
+        final body = document.body;
+        if (body != null) {
+          setState(() {
+            marketData = body.text;
+          });
+        } else {
+          print('No body content found in the HTML document.');
+        }
+      } else {
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Title: $title',
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                'Description: $description',
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          marketData,
+          style: TextStyle(fontSize: 16),
         ),
       ),
     );
