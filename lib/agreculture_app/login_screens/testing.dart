@@ -1,70 +1,101 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
+// Verticle
 
-void main() {
-  runApp(MyApp());
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const CropsData());
 }
 
-class MyApp extends StatelessWidget {
+class CropsData extends StatelessWidget {
+  const CropsData({Key? key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Web Scraping Example'),
-        ),
-        body: MarketDataPage(),
+      theme: ThemeData(
+        primarySwatch: Colors.amber,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: RealTimeData(),
     );
   }
 }
 
-class MarketDataPage extends StatefulWidget {
-  @override
-  _MarketDataPageState createState() => _MarketDataPageState();
-}
-
-class _MarketDataPageState extends State<MarketDataPage> {
-  String marketData = '';
-
-  @override
-  void initState() {
-    super.initState();
-    fetchMarketData();
-  }
-
-  Future<void> fetchMarketData() async {
-    try {
-      final response = await http.get(Uri.parse(
-          'https://www.napanta.com/market-trend/karnataka/haveri/haveri/cotton/gch#google_vignette'));
-      if (response.statusCode == 200) {
-        final document = parser.parse(response.body);
-        final body = document.body;
-        if (body != null) {
-          setState(() {
-            marketData = body.text;
-          });
-        } else {
-          print('No body content found in the HTML document.');
-        }
-      } else {
-        print('Failed to fetch data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
+class RealTimeData extends StatelessWidget {
+  RealTimeData({Key? key});
+  final ref = FirebaseDatabase.instance.ref("crop");
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          marketData,
-          style: TextStyle(fontSize: 16),
-        ),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Real time data fetching")),
+      body: Column(
+        children: [
+          Expanded(
+            child: FirebaseAnimatedList(
+              query: ref,
+              itemBuilder: (context, snapshot, animation, index) {
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Left side: Image
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            bottomLeft: Radius.circular(12),
+                          ),
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            margin: EdgeInsets.only(right: 16.0),
+                            child: Image.network(
+                              snapshot.child("image").value.toString(),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        // Right side: Title and Description
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Title
+                              Text(
+                                snapshot.child("name").value.toString(),
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4), // Spacer
+                              // Description
+                              Text(
+                                snapshot.child("description").value.toString(),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

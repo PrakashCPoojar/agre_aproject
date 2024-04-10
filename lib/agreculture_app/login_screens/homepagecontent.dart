@@ -1,18 +1,14 @@
 import 'dart:io';
 
-import 'package:agre_aproject/agreculture_app/cropsdata.dart';
 import 'package:agre_aproject/agreculture_app/farmerslist.dart';
-import 'package:agre_aproject/agreculture_app/login_screens/testing.dart';
+// import 'package:agre_aproject/agreculture_app/login_screens/testing.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:agre_aproject/agreculture_app/cropdetailpage.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:weather/weather.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -140,22 +136,22 @@ class HomePageTab extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                margin:
-                    EdgeInsets.only(left: 8), // Adjust left margin for spacing
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MarketDataPage()),
-                    );
-                  },
-                  child: const Text(
-                    "Testing",
-                    style: TextStyle(color: Color(0xFF779D07)),
-                  ),
-                ),
-              ),
+              // Container(
+              //   margin:
+              //       EdgeInsets.only(left: 8), // Adjust left margin for spacing
+              //   child: TextButton(
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(builder: (context) => CropsData()),
+              //       );
+              //     },
+              //     child: const Text(
+              //       "Testing",
+              //       style: TextStyle(color: Color(0xFF779D07)),
+              //     ),
+              //   ),
+              // ),
 
               HorizontalScrollCard(),
 
@@ -462,147 +458,6 @@ class WeatherWidget extends StatelessWidget {
   }
 }
 
-class HorizontalScrollCard extends StatelessWidget {
-  final List<String> imageUrls = [
-    'assets/images/crops/batha.jpg',
-    'assets/images/crops/kabbu.webp',
-    'assets/images/crops/jolla.jpeg',
-    'assets/images/crops/bath-1.jpg',
-    'assets/images/crops/adike.jpg',
-  ];
-
-  final List<String> blogtitles = [
-    'Rice',
-    'Sugar cane',
-    'Corn',
-    'Rice 1001',
-    'Betel nut',
-  ];
-
-  final List<String> blogdescriptions = [
-    'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
-    'Sugarcane thrives in hot, sunny tropical regions with ample rainfall or irrigation, needing a long, warm growing season and high solar radiation.',
-    'Corn plants have specific soil requirements. Early varieties grow best in sand or loam, while late varieties grow best in silty or clayey types of soil.',
-    'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
-    'Seedlings of 1 to 2 years of age should be planted in pits of about 90 x 90 x 90 cm at a spacing of 2.75 to 3.0 meter either way and covered with soil to the collar level of the plants and press the soil around. It is essential to provide shade during summer months.',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(0),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Container(
-        height: 300,
-        padding: EdgeInsets.all(8),
-        color: Colors.white,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container(
-                width: 170,
-                margin: EdgeInsets.symmetric(horizontal: 5),
-                color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 200,
-                      height: 120,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(8.0),
-                        ),
-                        child: Image.asset(
-                          imageUrls[index],
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        blogtitles[index],
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Container(
-                        height: 60,
-                        child: Text(
-                          blogdescriptions[index],
-                          style: TextStyle(fontSize: 14),
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DetailPage(
-                                  title: blogtitles[index],
-                                  description: blogdescriptions[index],
-                                  imageUrl: imageUrls[index],
-                                ),
-                              ),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: Text(
-                            "Read More",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Theme.of(context).primaryColor,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class VerticalCard extends StatelessWidget {
   // List of image asset paths
   final List<String> imageAssetPaths = [
@@ -732,15 +587,244 @@ class VerticalCard extends StatelessWidget {
   }
 }
 
+class HorizontalScrollCard extends StatelessWidget {
+  final List<String> imageUrls = [
+    'assets/images/crops/batha.jpg',
+    'assets/images/crops/kabbu.webp',
+    'assets/images/crops/jolla.jpeg',
+    'assets/images/crops/bath-1.jpg',
+    'assets/images/crops/adike.jpg',
+  ];
+
+  final List<String> blogtitles = [
+    'Rice',
+    'Sugar cane',
+    'Corn',
+    'Rice 1001',
+    'Betel nut',
+  ];
+  final List<String> relatedVideos = [
+    'Pkoov2xIgOA',
+    'wdvrzWtkHfA',
+    '62NQDNGFOXo',
+    'FW_bw9jdrlQ&t=14s',
+    'hLMDsVN20F8',
+  ];
+
+  final List<String> blogdescriptions = [
+    'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
+    'Sugarcane thrives in hot, sunny tropical regions with ample rainfall or irrigation, needing a long, warm growing season and high solar radiation.',
+    'Corn plants have specific soil requirements. Early varieties grow best in sand or loam, while late varieties grow best in silty or clayey types of soil.',
+    'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
+    'Seedlings of 1 to 2 years of age should be planted in pits of about 90 x 90 x 90 cm at a spacing of 2.75 to 3.0 meter either way and covered with soil to the collar level of the plants and press the soil around. It is essential to provide shade during summer months.',
+  ];
+
+  final List<List<String>> fertilizerNames = [
+    [
+      'Paddy',
+      'NUTRI-RICE',
+    ],
+    [
+      'Parle Ropvatika',
+      'Sugarcane Booster',
+    ],
+    [
+      'Paddy',
+      'NUTRI-RICE',
+    ],
+    [
+      'Paddy',
+      'NUTRI-RICE',
+    ],
+    [
+      'Areca Special',
+      'ANSHUL ARECA STAR',
+    ],
+  ];
+
+  final List<List<String>> fertilisersImages = [
+    [
+      'assets/images/Fertilisers/batha-1.jpg',
+      'assets/images/Fertilisers/batha.jpg',
+    ],
+    [
+      'assets/images/Fertilisers/sugercane_Ferti_1.jpg',
+      'assets/images/Fertilisers/sugercane_Ferti_2.png',
+    ],
+    [
+      'assets/images/Fertilisers/corn_Ferti_1.png',
+      'assets/images/Fertilisers/corn_Ferti_2.png',
+    ],
+    [
+      'assets/images/Fertilisers/batha-1.jpg',
+      'assets/images/Fertilisers/batha.jpg',
+    ],
+    [
+      'assets/images/Fertilisers/betel_Ferti_1.png',
+      'assets/images/Fertilisers/betel_Ferti_2.png',
+    ],
+  ];
+
+  final List<List<String>> fertiliserLinks = [
+    [
+      'https://www.amazon.in/Agrinex-Eco-Friendly-Organic-Multi-Nutrient-Promoter/dp/B07BHQQL7L',
+      'https://excelag.com/nutririce-efficacy-rice/',
+    ],
+    [
+      'https://www.amazon.in/Parle-Ropvatika-Sugarcane-Essential-Fertilizer/dp/B0BNXWG83N?th=1',
+      'https://agribegri.com/products/sethu-agroveer-liquid-sugarcane-booster-plant-growth-promoter.php?utm_source=google&utm_medium=pmax&utm_campaign=PMax:+Smart+All+3000&utm_term=&utm_campaign=PMax:+Smart+All+3000&utm_source=adwords&utm_medium=ppc&hsa_acc=7428009962&hsa_cam=17668524651&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAjw8diwBhAbEiwA7i_sJXQwJCEdzkQ8ImTkoV6apHUvekham8EE6-arS6U-z9xtxSC7eWagdRoCVRQQAvD_BwE',
+    ],
+    [
+      'https://gogarden.co.in/products/urea-fertilizers-for-plants-46-nitrogen-fertilizer-soil-application-and-100-water-soluble-1',
+      'https://agribegri.com/products/sethu-agroveer-onion-special-booster-plant-growth-regulator.php?utm_source=google&utm_medium=pmax&utm_campaign=PMax:+Smart+All+3000&utm_term=&utm_campaign=PMax:+Smart+All+3000&utm_source=adwords&utm_medium=ppc&hsa_acc=7428009962&hsa_cam=17668524651&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAjw8diwBhAbEiwA7i_sJUCR2XTqxBuhzLQmnloMMWV9YPye0liq5GNCZX8HJjI4E80lLTW4xhoCnd0QAvD_BwE',
+    ],
+    [
+      'https://www.amazon.in/Agrinex-Eco-Friendly-Organic-Multi-Nutrient-Promoter/dp/B07BHQQL7L',
+      'https://excelag.com/nutririce-efficacy-rice/',
+    ],
+    [
+      'https://www.agriplexindia.com/products/dr-soil-new-areca-special-organic-plant-food',
+      'https://m.indiamart.com/proddetail/anshul-areca-star-liquid-fertilizer-for-arecanut-2852894068962.html?pos=2&pla=n',
+    ],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(0),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Container(
+        height: 300,
+        padding: EdgeInsets.all(8),
+        color: Colors.white,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 170,
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      height: 120,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          topRight: Radius.circular(8.0),
+                        ),
+                        child: Image.asset(
+                          imageUrls[index],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        blogtitles[index],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                        height: 60,
+                        child: Text(
+                          blogdescriptions[index],
+                          style: TextStyle(fontSize: 14),
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.justify,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailPage(
+                                  title: blogtitles[index],
+                                  relatedvideos: relatedVideos[index],
+                                  description: blogdescriptions[index],
+                                  imageUrl: imageUrls[index],
+                                  fertilizerNames: fertilizerNames[index],
+                                  fertiliserlinks: fertiliserLinks[index],
+                                  fertilisersImages: fertilisersImages[index],
+                                ),
+                              ),
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                          ),
+                          child: Text(
+                            "Read More",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Theme.of(context).primaryColor,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class DetailPage extends StatelessWidget {
   final String title;
+  final String relatedvideos;
   final String description;
   final String imageUrl;
+  final List<String> fertilizerNames;
+  final List<String> fertiliserlinks;
+  final List<String> fertilisersImages;
 
   const DetailPage({
     required this.title,
+    required this.relatedvideos,
     required this.description,
     required this.imageUrl,
+    required this.fertilizerNames,
+    required this.fertiliserlinks,
+    required this.fertilisersImages,
   });
 
   @override
@@ -824,7 +908,7 @@ class DetailPage extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -838,15 +922,16 @@ class DetailPage extends StatelessWidget {
                             SizedBox(height: 10),
                             Text(
                               description,
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.justify,
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  // Add spacing between image and video
-                  // YouTube video
                 ],
               ),
             ),
@@ -867,17 +952,13 @@ class DetailPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildClickableImage(
-                        imageUrl: 'assets/images/Fertilisers/batha-1.jpg',
-                        text: 'Paddy',
-                        url:
-                            'https://www.amazon.in/Agrinex-Eco-Friendly-Organic-Multi-Nutrient-Promoter/dp/B07BHQQL7L',
-                      ),
-                      _buildClickableImage(
-                        imageUrl: 'assets/images/Fertilisers/batha.jpg',
-                        text: 'NUTRI-RICE',
-                        url: 'https://excelag.com/nutririce-efficacy-rice/',
-                      ),
+                      // Build Clickable Image for each fertilizer
+                      for (int i = 0; i < fertilizerNames.length; i++)
+                        _buildClickableImage(
+                          imageUrl: fertilisersImages[i],
+                          text: fertilizerNames[i],
+                          url: fertiliserlinks[i],
+                        ),
                     ],
                   ),
                 ],
@@ -898,7 +979,7 @@ class DetailPage extends StatelessWidget {
                     SizedBox(height: 20),
                     YoutubePlayer(
                       controller: YoutubePlayerController(
-                        initialVideoId: 'KNQdCc62-GA',
+                        initialVideoId: relatedvideos,
                         flags: YoutubePlayerFlags(
                           autoPlay: false,
                           mute: false,
