@@ -452,12 +452,38 @@ class SoilData extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ViewMorePage(
-                            name: snapshot.child("name").value.toString(),
-                            description:
-                                snapshot.child("description").value.toString(),
-                            imageUrl: snapshot.child("image").value.toString(),
-                          ),
+                          builder: (context) {
+                            // Retrieve suitable crops data
+                            List<dynamic>? suitableCropsData = snapshot
+                                .child("suitable")
+                                .value as List<dynamic>?;
+
+                            // Check if suitableCropsData is not null before mapping
+                            List<String> suitablesCropsNames =
+                                suitableCropsData != null
+                                    ? List<String>.from(suitableCropsData
+                                        .map((crop) => crop["name"].toString()))
+                                    : [];
+
+                            List<String> suitablesCropsImages =
+                                suitableCropsData != null
+                                    ? List<String>.from(suitableCropsData.map(
+                                        (crop) => crop["image"].toString()))
+                                    : [];
+
+                            // Return ViewMorePage with the provided data
+                            return ViewMorePage(
+                              name: snapshot.child("name").value.toString(),
+                              description: snapshot
+                                  .child("description")
+                                  .value
+                                  .toString(),
+                              imageUrl:
+                                  snapshot.child("image").value.toString(),
+                              suitablesCropsNames: suitablesCropsNames,
+                              suitablesCropsImages: suitablesCropsImages,
+                            );
+                          },
                         ),
                       );
                     },
@@ -550,53 +576,330 @@ class ViewMorePage extends StatelessWidget {
   final String name;
   final String description;
   final String imageUrl;
+  final List<String> suitablesCropsNames;
+  final List<String> suitablesCropsImages;
 
   const ViewMorePage({
     required this.name,
     required this.description,
     required this.imageUrl,
+    required this.suitablesCropsNames,
+    required this.suitablesCropsImages,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('View More'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imageUrl,
-                width: double.infinity,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 50, child: Container(color: Colors.green)),
+              Container(
+                height: 50,
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    FutureBuilder(
+                      future: _getImageUrl(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<String> snapshot) {
+                        return GestureDetector(
+                          onTap: () {
+                            _showUserProfileDialog(context);
+                          },
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+                              child: CircleAvatar(
+                                radius: 75,
+                                backgroundImage: snapshot.hasData
+                                    ? NetworkImage(snapshot.data!)
+                                    : AssetImage(
+                                            'assets/images/login/person-profile-icon.png')
+                                        as ImageProvider<Object>,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      '${FirebaseAuth.instance.currentUser!.displayName}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Spacer(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          size: 18,
+                          color: Color(0xFF779D07),
+                        ),
+                        // SizedBox(width: 5),
+                        // Text('Location'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
                 height: 200,
-                fit: BoxFit.cover,
+                child:
+                    WeatherWidget(), // Replace Placeholder with your WeatherWidget
               ),
-            ),
-            SizedBox(height: 16),
-            // Title
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+              Container(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        imageUrl,
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    // Title
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    // Description
+                    Text(
+                      description,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 8),
+                    Align(
+                      child: Text(
+                        'Suitable Crops:',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      alignment: Alignment.bottomLeft,
+                    ),
+
+                    SizedBox(height: 8),
+
+                    Container(
+                      height: 130,
+                      color: Colors.white
+                          .withOpacity(0.5), // Adjust opacity as needed
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      width: double.infinity,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: suitablesCropsNames.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            width: 100,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 150,
+                                  height: 130,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          suitablesCropsImages[index]),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(
+                                          0.3), // Adjust opacity as needed
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        suitablesCropsNames[index],
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 8),
-            // Description
-            Text(
-              description,
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _showUserProfileDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder(
+          future: _getImageUrl(), // Fetch the image URL from Firebase Storage
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            return AlertDialog(
+              title: Text('Your Profile'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Stack(
+                      children: [
+                        // Display the uploaded profile image or default image
+                        CircleAvatar(
+                          radius: 75,
+                          backgroundImage: snapshot.hasData
+                              ? NetworkImage(snapshot.data!)
+                              : AssetImage(
+                                      'assets/images/login/person-profile-icon.png')
+                                  as ImageProvider<Object>,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              _uploadImage(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                size: 30,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Full Name: ${FirebaseAuth.instance.currentUser!.displayName}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    'Email: ${FirebaseAuth.instance.currentUser!.email}',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Sign Out'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Function to get the image URL from Firebase Storage
+  Future<String> _getImageUrl() async {
+    String imageUrl = ''; // Default empty URL
+
+    // Fetch the image URL from Firebase Storage based on user's UID
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+    imageUrl = await storageReference.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  void _uploadImage(BuildContext context) async {
+    final _picker = ImagePicker();
+    XFile? image;
+
+    // Pick an image from gallery
+    image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Upload image to Firebase Storage
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${FirebaseAuth.instance.currentUser!.uid}');
+      UploadTask uploadTask = storageReference.putFile(File(image.path));
+
+      // Get download URL
+      await uploadTask.whenComplete(() async {
+        String imageUrl = await storageReference.getDownloadURL();
+
+        // Update user profile image URL in Firestore or Realtime Database
+        // Example:
+        // await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
+        //   'profileImageUrl': imageUrl,
+        // });
+        // or
+        // await FirebaseDatabase.instance.reference().child('users/${FirebaseAuth.instance.currentUser!.uid}/profileImageUrl').set(imageUrl);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Image uploaded successfully.'),
+        ));
+      }).catchError((error) {
+        // Handle upload errors
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Failed to upload image: $error'),
+        ));
+      });
+    }
   }
 }
