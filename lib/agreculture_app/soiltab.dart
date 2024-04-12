@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:agre_aproject/agreculture_app/farmerslist.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -751,6 +752,38 @@ class ViewMorePage extends StatelessWidget {
                             ),
                           );
                         },
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Container(
+                      // height: 52, // Adjust height as needed
+                      padding: EdgeInsets.symmetric(
+                          vertical: 20), // Adjust vertical padding as needed
+                      // Button
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FarmersList()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                          ),
+                          child: Text(
+                            'Talk to Experts',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
