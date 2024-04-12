@@ -7,15 +7,6 @@ class resetpassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Forgot Password',
-      //     style: TextStyle(
-      //       fontSize: 18,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),

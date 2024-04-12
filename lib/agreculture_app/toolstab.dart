@@ -17,7 +17,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(HometoolTab());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -51,19 +51,34 @@ class HometoolTab extends StatelessWidget {
     }
   }
 
+  String? getFirstName() {
+    // Get the current user from FirebaseAuth
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is signed in and if their display name is not null
+    if (user != null && user.displayName != null) {
+      // Split the display name by spaces and return the first part
+      return user.displayName!.split(' ')[0];
+    }
+
+    // If the user is not signed in or their display name is null, return null
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         body: Container(
-          color: Color(0xFFF2F2F2),
+          color: Colors.white,
           // Background color for the entire page
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // First Row
-                SizedBox(height: 50, child: Container(color: Colors.green)),
+                SizedBox(
+                    height: 50, child: Container(color: Color(0xFF779D07))),
                 SizedBox(
                   height: 50,
                   child: Container(
@@ -99,7 +114,7 @@ class HometoolTab extends StatelessWidget {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          '${FirebaseAuth.instance.currentUser!.displayName}',
+                          '${getFirstName()}',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -132,16 +147,27 @@ class HometoolTab extends StatelessWidget {
                     child: WeatherWidget(),
                   ),
                 ),
-
-                SizedBox(
-                  height: 535,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 535,
-                        child: SoilData(),
-                      )
-                    ],
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+                  child: Container(
+                    // height: 850,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Crops Details",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 0),
+                        Container(
+                          height: 535,
+                          child: SoilData(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -191,9 +217,9 @@ class HometoolTab extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -224,13 +250,23 @@ class HometoolTab extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );
@@ -325,14 +361,14 @@ class WeatherWidget extends StatelessWidget {
               height: 180,
               width: double.infinity,
               child: Card(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(8),
                 color: Colors.transparent, // Set card color to transparent
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: AssetImage(
                           'assets/images/weather/weather-bg.png'), // Background image path
@@ -437,9 +473,6 @@ class SoilData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tools'), // Set the title of the app bar
-      ),
       body: Column(
         children: [
           Container(
@@ -530,15 +563,18 @@ class CropCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(2.0),
         child: Row(
           children: [
             // Left side: Image (30% width)
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.4,
-              height: 150,
+              height: 185,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  bottomLeft: Radius.circular(8.0),
+                ),
                 child: Image.network(
                   imageUrl,
                   fit: BoxFit.cover,
@@ -553,7 +589,7 @@ class CropCard extends StatelessWidget {
                 children: [
                   // Title
                   Text(
-                    name,
+                    name.replaceFirst(name[0], name[0].toUpperCase()),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -566,12 +602,13 @@ class CropCard extends StatelessWidget {
                     style: TextStyle(fontSize: 16),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.justify,
                   ),
                   SizedBox(height: 4),
                   // Description
                   Text(
-                    price,
-                    style: TextStyle(fontSize: 16),
+                    'Price: ' + price,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -581,7 +618,25 @@ class CropCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: onPressed,
-                      child: Text('View More'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Color(0xFF779D07), // Set background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(35.0),
+                            bottomLeft: Radius.circular(0),
+                            bottomRight: Radius.circular(8.0),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8, // Adjusted padding to reduce space
+                        ),
+                      ),
+                      child: Text(
+                        'View More',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -614,6 +669,20 @@ class ViewMorePage extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  String? getFirstName() {
+    // Get the current user from FirebaseAuth
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is signed in and if their display name is not null
+    if (user != null && user.displayName != null) {
+      // Split the display name by spaces and return the first part
+      return user.displayName!.split(' ')[0];
+    }
+
+    // If the user is not signed in or their display name is null, return null
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -622,7 +691,11 @@ class ViewMorePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 50, child: Container(color: Colors.green)),
+              SizedBox(
+                  height: 50,
+                  child: Container(
+                    color: Color(0xFF779D07),
+                  )),
               Container(
                 height: 50,
                 padding: const EdgeInsets.all(8),
@@ -656,7 +729,7 @@ class ViewMorePage extends StatelessWidget {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      '${FirebaseAuth.instance.currentUser!.displayName}',
+                      '${getFirstName()}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -688,7 +761,9 @@ class ViewMorePage extends StatelessWidget {
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8)),
                       child: Image.network(
                         imageUrl,
                         width: double.infinity,
@@ -712,13 +787,14 @@ class ViewMorePage extends StatelessWidget {
                     // Description
                     Text(
                       description,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                       textAlign: TextAlign.justify,
                     ),
                     Container(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(0.0),
                         child: Column(
                           children: [
+                            SizedBox(height: 8),
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -751,7 +827,7 @@ class ViewMorePage extends StatelessWidget {
                     SizedBox(height: 8),
                     Align(
                       child: Text(
-                        'Fertilisers',
+                        'Supporting Tools',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -797,7 +873,7 @@ class ViewMorePage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: Color(0xFF779D07),
                             padding: EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 10,
@@ -901,7 +977,7 @@ class ViewMorePage extends StatelessWidget {
                               ? NetworkImage(snapshot.data!)
                               : AssetImage(
                                       'assets/images/login/person-profile-icon.png')
-                                  as ImageProvider<Object>,
+                                  as ImageProvider,
                         ),
                         Positioned(
                           bottom: 0,
@@ -917,9 +993,9 @@ class ViewMorePage extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -950,13 +1026,23 @@ class ViewMorePage extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );

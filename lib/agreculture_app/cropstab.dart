@@ -51,19 +51,34 @@ class HomecropsTab extends StatelessWidget {
     }
   }
 
+  String? getFirstName() {
+    // Get the current user from FirebaseAuth
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is signed in and if their display name is not null
+    if (user != null && user.displayName != null) {
+      // Split the display name by spaces and return the first part
+      return user.displayName!.split(' ')[0];
+    }
+
+    // If the user is not signed in or their display name is null, return null
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         body: Container(
-          color: Color(0xFFF2F2F2),
+          color: Color.fromARGB(255, 255, 255, 255),
           // Background color for the entire page
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // First Row
-                SizedBox(height: 50, child: Container(color: Colors.green)),
+                SizedBox(
+                    height: 50, child: Container(color: Color(0xFF779D07))),
                 SizedBox(
                   height: 50,
                   child: Container(
@@ -99,7 +114,7 @@ class HomecropsTab extends StatelessWidget {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          '${FirebaseAuth.instance.currentUser!.displayName}',
+                          '${getFirstName()}',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -133,15 +148,27 @@ class HomecropsTab extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(
-                  height: 535,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 535,
-                        child: SoilData(),
-                      )
-                    ],
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+                  child: Container(
+                    // height: 850,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Crops Details",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 0),
+                        Container(
+                          height: 700,
+                          child: SoilData(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -191,9 +218,9 @@ class HomecropsTab extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -224,13 +251,23 @@ class HomecropsTab extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );
@@ -325,14 +362,14 @@ class WeatherWidget extends StatelessWidget {
               height: 180,
               width: double.infinity,
               child: Card(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(8),
                 color: Colors.transparent, // Set card color to transparent
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: AssetImage(
                           'assets/images/weather/weather-bg.png'), // Background image path
@@ -437,9 +474,6 @@ class SoilData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Crops'), // Set the title of the app bar
-      ),
       body: Column(
         children: [
           Container(
@@ -526,23 +560,27 @@ class CropCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
+      child: Container(
+        padding: const EdgeInsets.all(0.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Left side: Image (30% width)
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.4,
-              height: 150,
+              height: 155,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  bottomLeft: Radius.circular(8.0),
+                ),
                 child: Image.network(
                   imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 16), // Adjusted width to reduce space
             // Right side: Name, Description, and Button (70% width)
             Expanded(
               child: Column(
@@ -550,27 +588,46 @@ class CropCard extends StatelessWidget {
                 children: [
                   // Title
                   Text(
-                    name,
+                    name.replaceFirst(name[0], name[0].toUpperCase()),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 4), // Adjusted height to reduce space
                   // Description
                   Text(
                     description,
                     style: TextStyle(fontSize: 16),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.justify,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8), // Adjusted height to reduce space
                   // Button aligned to the right
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: onPressed,
-                      child: Text('View More'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Color(0xFF779D07), // Set background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(35.0),
+                            bottomLeft: Radius.circular(0),
+                            bottomRight: Radius.circular(8.0),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8, // Adjusted padding to reduce space
+                        ),
+                      ),
+                      child: Text(
+                        'View More',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -611,7 +668,7 @@ class ViewMorePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 50, child: Container(color: Colors.green)),
+              SizedBox(height: 50, child: Container(color: Color(0xFF779D07))),
               Container(
                 height: 50,
                 padding: const EdgeInsets.all(8),
@@ -690,7 +747,7 @@ class ViewMorePage extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        name,
+                        name.replaceFirst(name[0], name[0].toUpperCase()),
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -701,42 +758,44 @@ class ViewMorePage extends StatelessWidget {
                     // Description
                     Text(
                       description,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                       textAlign: TextAlign.justify,
                     ),
+                    SizedBox(height: 8),
+
                     Container(
-                        padding: EdgeInsets.all(8.0),
+                        // padding: EdgeInsets.all(.0),
                         child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Related Videos",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
-                              ),
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Related Videos",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        YoutubePlayer(
+                          controller: YoutubePlayerController(
+                            initialVideoId: video,
+                            flags: YoutubePlayerFlags(
+                              autoPlay: false,
+                              mute: false,
                             ),
-                            SizedBox(height: 20),
-                            YoutubePlayer(
-                              controller: YoutubePlayerController(
-                                initialVideoId: video,
-                                flags: YoutubePlayerFlags(
-                                  autoPlay: false,
-                                  mute: false,
-                                ),
-                              ),
-                              showVideoProgressIndicator: true,
-                              progressIndicatorColor: Colors.amber,
-                              progressColors: ProgressBarColors(
-                                playedColor: Colors.amber,
-                                handleColor: Colors.amberAccent,
-                              ),
-                              onReady: () {
-                                print('Player is ready.');
-                              },
-                            ),
-                          ],
-                        )),
+                          ),
+                          showVideoProgressIndicator: true,
+                          progressIndicatorColor: Colors.amber,
+                          progressColors: ProgressBarColors(
+                            playedColor: Colors.amber,
+                            handleColor: Colors.amberAccent,
+                          ),
+                          onReady: () {
+                            print('Player is ready.');
+                          },
+                        ),
+                      ],
+                    )),
                     SizedBox(height: 8),
                     Align(
                       child: Text(
@@ -786,7 +845,7 @@ class ViewMorePage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: Color(0xFF779D07),
                             padding: EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 10,
@@ -890,7 +949,7 @@ class ViewMorePage extends StatelessWidget {
                               ? NetworkImage(snapshot.data!)
                               : AssetImage(
                                       'assets/images/login/person-profile-icon.png')
-                                  as ImageProvider<Object>,
+                                  as ImageProvider,
                         ),
                         Positioned(
                           bottom: 0,
@@ -906,9 +965,9 @@ class ViewMorePage extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -939,13 +998,23 @@ class ViewMorePage extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );

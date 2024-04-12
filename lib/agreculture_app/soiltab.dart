@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:weather/weather.dart';
@@ -15,7 +16,7 @@ import 'package:weather/weather.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(HomesoilTab());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -49,97 +50,184 @@ class HomesoilTab extends StatelessWidget {
     }
   }
 
+  String? getFirstName() {
+    // Get the current user from FirebaseAuth
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is signed in and if their display name is not null
+    if (user != null && user.displayName != null) {
+      // Split the display name by spaces and return the first part
+      return user.displayName!.split(' ')[0];
+    }
+
+    // If the user is not signed in or their display name is null, return null
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ref = FirebaseDatabase.instance.ref("soil");
     return MaterialApp(
       home: Scaffold(
         body: Container(
-          color: Color(0xFFF2F2F2),
+          color: Colors.white,
           // Background color for the entire page
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // First Row
-                SizedBox(height: 50, child: Container(color: Colors.green)),
-                SizedBox(
+                Container(
                   height: 50,
-                  child: Container(
-                    height: 50,
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        FutureBuilder(
-                          future: _getImageUrl(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            return GestureDetector(
-                              onTap: () {
-                                _showUserProfileDialog(context);
-                              },
-                              child: Container(
-                                width: 32,
-                                height: 32,
-                                child: ClipRRect(
-                                  // half of the desired width/height
-                                  child: CircleAvatar(
-                                    radius: 75,
-                                    backgroundImage: snapshot.hasData
-                                        ? NetworkImage(snapshot.data!)
-                                        : AssetImage(
-                                                'assets/images/login/person-profile-icon.png')
-                                            as ImageProvider,
-                                  ),
+                  color: Color(0xFF779D07),
+                ),
+                Container(
+                  height: 50,
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      FutureBuilder(
+                        future: _getImageUrl(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          return GestureDetector(
+                            onTap: () {
+                              _showUserProfileDialog(context);
+                            },
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              child: ClipRRect(
+                                // half of the desired width/height
+                                child: CircleAvatar(
+                                  radius: 16, // reduced the radius
+                                  backgroundImage: snapshot.hasData
+                                      ? NetworkImage(snapshot.data!)
+                                      : AssetImage(
+                                              'assets/images/login/person-profile-icon.png')
+                                          as ImageProvider,
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        '${getFirstName()}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(width: 10),
+                      ),
+                      Spacer(), // Added Spacer widget
+
+                      // Right section
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 18,
+                            color: Color(0xFF779D07),
+                          ),
+                          // SizedBox(width: 5),
+                          // Text('Location'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16), // Added SizedBox for spacing
+                Container(
+                  height: 200,
+                  child: WeatherWidget(),
+                ),
+                SizedBox(height: 16), // Added SizedBox for spacing
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+                  child: Container(
+                    height: 569,
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // Align text to the left
+                      children: [
                         Text(
-                          '${FirebaseAuth.instance.currentUser!.displayName}',
+                          "Soil Details",
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Spacer(), // Added Spacer widget
+                        SizedBox(height: 0), // Added SizedBox for spacing
+                        Expanded(
+                          child: FirebaseAnimatedList(
+                            query: ref,
+                            itemBuilder: (context, snapshot, animation, index) {
+                              return CropCard(
+                                name: snapshot.child("name").value.toString(),
+                                description: snapshot
+                                    .child("description")
+                                    .value
+                                    .toString(),
+                                imageUrl:
+                                    snapshot.child("image").value.toString(),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        // Retrieve suitable crops data
+                                        List<dynamic>? suitableCropsData =
+                                            snapshot.child("suitable").value
+                                                as List<dynamic>?;
 
-                        // Right section
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 18,
-                              color: Color(0xFF779D07),
-                            ),
-                            // SizedBox(width: 5),
-                            // Text('Location'),
-                          ],
-                        ),
+                                        // Check if suitableCropsData is not null before mapping
+                                        List<String> suitablesCropsNames =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["name"]
+                                                            .toString()))
+                                                : [];
+
+                                        List<String> suitablesCropsImages =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["image"]
+                                                            .toString()))
+                                                : [];
+
+                                        // Return ViewMorePage with the provided data
+                                        return ViewMorePage(
+                                          name: snapshot
+                                              .child("name")
+                                              .value
+                                              .toString(),
+                                          description: snapshot
+                                              .child("description")
+                                              .value
+                                              .toString(),
+                                          imageUrl: snapshot
+                                              .child("image")
+                                              .value
+                                              .toString(),
+                                          suitablesCropsNames:
+                                              suitablesCropsNames,
+                                          suitablesCropsImages:
+                                              suitablesCropsImages,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 200,
-                  child: Container(
-                    height: 200,
-                    margin: EdgeInsets.zero,
-                    child: WeatherWidget(),
-                  ),
-                ),
-
-                SizedBox(
-                  height: 535,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 535,
-                        child: SoilData(),
-                      )
-                    ],
                   ),
                 ),
               ],
@@ -189,9 +277,9 @@ class HomesoilTab extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -222,13 +310,23 @@ class HomesoilTab extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );
@@ -323,14 +421,14 @@ class WeatherWidget extends StatelessWidget {
               height: 180,
               width: double.infinity,
               child: Card(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(8),
                 color: Colors.transparent, // Set card color to transparent
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: AssetImage(
                           'assets/images/weather/weather-bg.png'), // Background image path
@@ -428,77 +526,6 @@ class WeatherWidget extends StatelessWidget {
   }
 }
 
-class SoilData extends StatelessWidget {
-  SoilData({Key? key});
-  final ref = FirebaseDatabase.instance.ref("soil");
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Soil'), // Set the title of the app bar
-      ),
-      body: Column(
-        children: [
-          Container(
-            child: Expanded(
-              child: FirebaseAnimatedList(
-                query: ref,
-                itemBuilder: (context, snapshot, animation, index) {
-                  return CropCard(
-                    name: snapshot.child("name").value.toString(),
-                    description: snapshot.child("description").value.toString(),
-                    imageUrl: snapshot.child("image").value.toString(),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            // Retrieve suitable crops data
-                            List<dynamic>? suitableCropsData = snapshot
-                                .child("suitable")
-                                .value as List<dynamic>?;
-
-                            // Check if suitableCropsData is not null before mapping
-                            List<String> suitablesCropsNames =
-                                suitableCropsData != null
-                                    ? List<String>.from(suitableCropsData
-                                        .map((crop) => crop["name"].toString()))
-                                    : [];
-
-                            List<String> suitablesCropsImages =
-                                suitableCropsData != null
-                                    ? List<String>.from(suitableCropsData.map(
-                                        (crop) => crop["image"].toString()))
-                                    : [];
-
-                            // Return ViewMorePage with the provided data
-                            return ViewMorePage(
-                              name: snapshot.child("name").value.toString(),
-                              description: snapshot
-                                  .child("description")
-                                  .value
-                                  .toString(),
-                              imageUrl:
-                                  snapshot.child("image").value.toString(),
-                              suitablesCropsNames: suitablesCropsNames,
-                              suitablesCropsImages: suitablesCropsImages,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class CropCard extends StatelessWidget {
   final String name;
   final String description;
@@ -516,23 +543,27 @@ class CropCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
+      child: Container(
+        padding: const EdgeInsets.all(0.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Left side: Image (30% width)
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.4,
-              height: 150,
+              height: 155,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  bottomLeft: Radius.circular(8.0),
+                ),
                 child: Image.network(
                   imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 16), // Adjusted width to reduce space
             // Right side: Name, Description, and Button (70% width)
             Expanded(
               child: Column(
@@ -540,13 +571,13 @@ class CropCard extends StatelessWidget {
                 children: [
                   // Title
                   Text(
-                    name,
+                    name.replaceFirst(name[0], name[0].toUpperCase()),
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 4), // Adjusted height to reduce space
                   // Description
                   Text(
                     description,
@@ -554,13 +585,31 @@ class CropCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 8), // Adjusted height to reduce space
                   // Button aligned to the right
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: onPressed,
-                      child: Text('View More'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Color(0xFF779D07), // Set background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(35.0),
+                            bottomLeft: Radius.circular(0),
+                            bottomRight: Radius.circular(8.0),
+                          ),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8, // Adjusted padding to reduce space
+                        ),
+                      ),
+                      child: Text(
+                        'View More',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -663,7 +712,9 @@ class ViewMorePage extends StatelessWidget {
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8)),
                       child: Image.network(
                         imageUrl,
                         width: double.infinity,
@@ -676,7 +727,7 @@ class ViewMorePage extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
-                        name,
+                        name.replaceFirst(name[0], name[0].toUpperCase()),
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -687,7 +738,8 @@ class ViewMorePage extends StatelessWidget {
                     // Description
                     Text(
                       description,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
+                      textAlign: TextAlign.justify,
                     ),
                     SizedBox(height: 8),
                     Align(
@@ -770,7 +822,7 @@ class ViewMorePage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: Color(0xFF779D07),
                             padding: EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 10,
@@ -819,7 +871,7 @@ class ViewMorePage extends StatelessWidget {
                               ? NetworkImage(snapshot.data!)
                               : AssetImage(
                                       'assets/images/login/person-profile-icon.png')
-                                  as ImageProvider<Object>,
+                                  as ImageProvider,
                         ),
                         Positioned(
                           bottom: 0,
@@ -835,9 +887,9 @@ class ViewMorePage extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -868,13 +920,23 @@ class ViewMorePage extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );

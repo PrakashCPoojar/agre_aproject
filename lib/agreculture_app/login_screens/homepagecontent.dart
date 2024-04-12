@@ -48,17 +48,31 @@ class HomePageTab extends StatelessWidget {
     }
   }
 
+  String? getFirstName() {
+    // Get the current user from FirebaseAuth
+    var user = FirebaseAuth.instance.currentUser;
+
+    // Check if the user is signed in and if their display name is not null
+    if (user != null && user.displayName != null) {
+      // Split the display name by spaces and return the first part
+      return user.displayName!.split(' ')[0];
+    }
+
+    // If the user is not signed in or their display name is null, return null
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color(0xFFF2F2F2), // Background color for the entire page
+        color: Colors.white, // Background color for the entire page
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // First Row
-              SizedBox(height: 50, child: Container(color: Colors.green)),
+              SizedBox(height: 50, child: Container(color: Color(0xFF779D07))),
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Row(
@@ -92,7 +106,7 @@ class HomePageTab extends StatelessWidget {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      '${FirebaseAuth.instance.currentUser!.displayName}',
+                      '${getFirstName()}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -219,9 +233,9 @@ class HomePageTab extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -252,13 +266,23 @@ class HomePageTab extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );
@@ -353,14 +377,14 @@ class WeatherWidget extends StatelessWidget {
               height: 180,
               width: double.infinity,
               child: Card(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(8),
                 color: Colors.transparent, // Set card color to transparent
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: AssetImage(
                           'assets/images/weather/weather-bg.png'), // Background image path
@@ -903,10 +927,19 @@ class DetailPage extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        imageUrl,
-                        fit: BoxFit.cover,
+                      ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(
+                              8.0), // Set the radius for the top-left corner
+                          topRight: Radius.circular(
+                              8.0), // Set the radius for the top-right corner
+                        ),
+                        child: Image.asset(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                        ),
                       ),
+                      SizedBox(height: 16),
                       Padding(
                         padding: EdgeInsets.all(0),
                         child: Column(
@@ -915,7 +948,7 @@ class DetailPage extends StatelessWidget {
                             Text(
                               title,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -923,7 +956,7 @@ class DetailPage extends StatelessWidget {
                             Text(
                               description,
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                               ),
                               textAlign: TextAlign.justify,
                             ),
@@ -945,7 +978,7 @@ class DetailPage extends StatelessWidget {
                     child: Text(
                       "Fertilisers",
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -973,7 +1006,7 @@ class DetailPage extends StatelessWidget {
                       child: Text(
                         "Related Videos",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
+                            fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -1090,7 +1123,7 @@ class DetailPage extends StatelessWidget {
                               ? NetworkImage(snapshot.data!)
                               : AssetImage(
                                       'assets/images/login/person-profile-icon.png')
-                                  as ImageProvider<Object>,
+                                  as ImageProvider,
                         ),
                         Positioned(
                           bottom: 0,
@@ -1106,9 +1139,9 @@ class DetailPage extends StatelessWidget {
                                 color: Colors.white,
                               ),
                               child: Icon(
-                                Icons.add,
+                                Icons.edit,
                                 size: 30,
-                                color: Colors.blue,
+                                color: Color(0xFF779D07),
                               ),
                             ),
                           ),
@@ -1139,13 +1172,23 @@ class DetailPage extends StatelessWidget {
                     FirebaseAuth.instance.signOut();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Sign Out'),
+                  child: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Color(0xFF779D07),
+                    ),
+                  ),
                 ),
               ],
             );
