@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color(0xFF779D07),
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -67,91 +68,90 @@ class HomecropsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ref = FirebaseDatabase.instance.ref("crop");
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
-          color: Color.fromARGB(255, 255, 255, 255),
+          color: Colors.white,
           // Background color for the entire page
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // First Row
-                SizedBox(
-                    height: 50, child: Container(color: Color(0xFF779D07))),
-                SizedBox(
+                Container(
                   height: 50,
-                  child: Container(
-                    height: 50,
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        FutureBuilder(
-                          future: _getImageUrl(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            return GestureDetector(
-                              onTap: () {
-                                _showUserProfileDialog(context);
-                              },
-                              child: Container(
-                                width: 32,
-                                height: 32,
-                                child: ClipRRect(
-                                  // half of the desired width/height
-                                  child: CircleAvatar(
-                                    radius: 75,
-                                    backgroundImage: snapshot.hasData
-                                        ? NetworkImage(snapshot.data!)
-                                        : AssetImage(
-                                                'assets/images/login/person-profile-icon.png')
-                                            as ImageProvider,
-                                  ),
+                  color: Color(0xFF779D07),
+                ),
+                Container(
+                  height: 50,
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      FutureBuilder(
+                        future: _getImageUrl(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          return GestureDetector(
+                            onTap: () {
+                              _showUserProfileDialog(context);
+                            },
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              child: ClipRRect(
+                                // half of the desired width/height
+                                child: CircleAvatar(
+                                  radius: 16, // reduced the radius
+                                  backgroundImage: snapshot.hasData
+                                      ? NetworkImage(snapshot.data!)
+                                      : AssetImage(
+                                              'assets/images/login/person-profile-icon.png')
+                                          as ImageProvider,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          '${getFirstName()}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Spacer(), // Added Spacer widget
-
-                        // Right section
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 18,
-                              color: Color(0xFF779D07),
                             ),
-                            // SizedBox(width: 5),
-                            // Text('Location'),
-                          ],
+                          );
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        '${getFirstName()}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
+                      ),
+                      Spacer(), // Added Spacer widget
+
+                      // Right section
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 18,
+                            color: Color(0xFF779D07),
+                          ),
+                          // SizedBox(width: 5),
+                          // Text('Location'),
+                        ],
+                      ),
+                    ],
                   ),
+                ),
+                SizedBox(height: 16), // Added SizedBox for spacing
+                Container(
+                  height: 200,
+                  child: WeatherWidget(),
                 ),
                 SizedBox(
-                  height: 200,
+                  height: MediaQuery.of(context)
+                      .size
+                      .height, // Adjust height dynamically
                   child: Container(
-                    height: 200,
-                    margin: EdgeInsets.zero,
-                    child: WeatherWidget(),
-                  ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-                  child: Container(
-                    // height: 850,
+                    padding: EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -162,10 +162,84 @@ class HomecropsTab extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 0),
-                        Container(
-                          height: 700,
-                          child: SoilData(),
+                        SizedBox(height: 0), // Added SizedBox for spacing
+                        Expanded(
+                          child: FirebaseAnimatedList(
+                            physics:
+                                NeverScrollableScrollPhysics(), // Disable scrolling
+                            query: ref,
+                            itemBuilder: (context, snapshot, animation, index) {
+                              return CropCard(
+                                name: snapshot.child("name").value.toString(),
+                                description: snapshot
+                                    .child("description")
+                                    .value
+                                    .toString(),
+                                imageUrl:
+                                    snapshot.child("image").value.toString(),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        List<dynamic>? suitableCropsData =
+                                            snapshot.child("fertilisers").value
+                                                as List<dynamic>?;
+
+                                        List<String> suitablesCropsNames =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["name"]
+                                                            .toString()))
+                                                : [];
+
+                                        List<String> suitablesCropsImages =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["image"]
+                                                            .toString()))
+                                                : [];
+                                        List<String> suitablesCropsLink =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["link"]
+                                                            .toString()))
+                                                : [];
+
+                                        return ViewMorePage(
+                                          name: snapshot
+                                              .child("name")
+                                              .value
+                                              .toString(),
+                                          video: snapshot
+                                              .child("videos")
+                                              .value
+                                              .toString(),
+                                          description: snapshot
+                                              .child("description")
+                                              .value
+                                              .toString(),
+                                          imageUrl: snapshot
+                                              .child("image")
+                                              .value
+                                              .toString(),
+                                          suitablesCropsNames:
+                                              suitablesCropsNames,
+                                          suitablesCropsImages:
+                                              suitablesCropsImages,
+                                          suitablesCropsLink:
+                                              suitablesCropsLink,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         )
                       ],
                     ),
@@ -583,54 +657,58 @@ class CropCard extends StatelessWidget {
             SizedBox(width: 16), // Adjusted width to reduce space
             // Right side: Name, Description, and Button (70% width)
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  Text(
-                    name.replaceFirst(name[0], name[0].toUpperCase()),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    8.0, 0, 8.0, 0), // Add padding to left and right
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Text(
+                      name.replaceFirst(name[0], name[0].toUpperCase()),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4), // Adjusted height to reduce space
-                  // Description
-                  Text(
-                    description,
-                    style: TextStyle(fontSize: 16),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.justify,
-                  ),
-                  SizedBox(height: 8), // Adjusted height to reduce space
-                  // Button aligned to the right
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: onPressed,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Color(0xFF779D07), // Set background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(35.0),
-                            bottomLeft: Radius.circular(0),
-                            bottomRight: Radius.circular(8.0),
+                    SizedBox(height: 4), // Adjusted height to reduce space
+                    // Description
+                    Text(
+                      description,
+                      style: TextStyle(fontSize: 16),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.justify,
+                    ),
+                    SizedBox(height: 8), // Adjusted height to reduce space
+                    // Button aligned to the right
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        onPressed: onPressed,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Color(0xFF779D07), // Set background color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(35.0),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(8.0),
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8, // Adjusted padding to reduce space
                           ),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8, // Adjusted padding to reduce space
+                        child: Text(
+                          'View More',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      child: Text(
-                        'View More',
-                        style: TextStyle(color: Colors.white),
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -734,7 +812,9 @@ class ViewMorePage extends StatelessWidget {
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8)),
                       child: Image.network(
                         imageUrl,
                         width: double.infinity,

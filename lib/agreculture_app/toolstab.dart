@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:agre_aproject/agreculture_app/farmerslist.dart';
-import 'package:agre_aproject/agreculture_app/login_screens/homepagecontent.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,10 +8,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:weather/weather.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:weather/weather.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 void main() async {
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color(0xFF779D07),
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -68,7 +69,9 @@ class HometoolTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ref = FirebaseDatabase.instance.ref("tools");
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
           color: Colors.white,
@@ -78,94 +81,171 @@ class HometoolTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // First Row
-                SizedBox(
-                    height: 50, child: Container(color: Color(0xFF779D07))),
-                SizedBox(
+                Container(
                   height: 50,
-                  child: Container(
-                    height: 50,
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        FutureBuilder(
-                          future: _getImageUrl(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            return GestureDetector(
-                              onTap: () {
-                                _showUserProfileDialog(context);
-                              },
-                              child: Container(
-                                width: 32,
-                                height: 32,
-                                child: ClipRRect(
-                                  // half of the desired width/height
-                                  child: CircleAvatar(
-                                    radius: 75,
-                                    backgroundImage: snapshot.hasData
-                                        ? NetworkImage(snapshot.data!)
-                                        : AssetImage(
-                                                'assets/images/login/person-profile-icon.png')
-                                            as ImageProvider,
-                                  ),
+                  color: Color(0xFF779D07),
+                ),
+                Container(
+                  height: 50,
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      FutureBuilder(
+                        future: _getImageUrl(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          return GestureDetector(
+                            onTap: () {
+                              _showUserProfileDialog(context);
+                            },
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              child: ClipRRect(
+                                // half of the desired width/height
+                                child: CircleAvatar(
+                                  radius: 16, // reduced the radius
+                                  backgroundImage: snapshot.hasData
+                                      ? NetworkImage(snapshot.data!)
+                                      : AssetImage(
+                                              'assets/images/login/person-profile-icon.png')
+                                          as ImageProvider,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          '${getFirstName()}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Spacer(), // Added Spacer widget
-
-                        // Right section
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 18,
-                              color: Color(0xFF779D07),
                             ),
-                            // SizedBox(width: 5),
-                            // Text('Location'),
-                          ],
+                          );
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        '${getFirstName()}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
+                      ),
+                      Spacer(), // Added Spacer widget
+
+                      // Right section
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 18,
+                            color: Color(0xFF779D07),
+                          ),
+                          // SizedBox(width: 5),
+                          // Text('Location'),
+                        ],
+                      ),
+                    ],
                   ),
+                ),
+                // SizedBox(height: 16), // Added SizedBox for spacing
+                Container(
+                  height: 200,
+                  child: WeatherWidget(),
                 ),
                 SizedBox(
-                  height: 200,
+                  height: MediaQuery.of(context)
+                      .size
+                      .height, // Adjust height dynamically
                   child: Container(
-                    height: 200,
-                    margin: EdgeInsets.zero,
-                    child: WeatherWidget(),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-                  child: Container(
-                    // height: 850,
+                    padding: EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Crops Details",
+                          "Tools",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 0),
-                        Container(
-                          height: 535,
-                          child: SoilData(),
+                        SizedBox(height: 0), // Added SizedBox for spacing
+                        Expanded(
+                          child: FirebaseAnimatedList(
+                            physics:
+                                NeverScrollableScrollPhysics(), // Disable scrolling
+                            query: ref,
+                            itemBuilder: (context, snapshot, animation, index) {
+                              return CropCard(
+                                name: snapshot.child("name").value.toString(),
+                                description: snapshot
+                                    .child("description")
+                                    .value
+                                    .toString(),
+                                imageUrl:
+                                    snapshot.child("image").value.toString(),
+                                price: snapshot.child("price").value.toString(),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        // Retrieve suitable crops data
+                                        List<dynamic>? suitableCropsData =
+                                            snapshot.child("related").value
+                                                as List<dynamic>?;
+
+                                        // Check if suitableCropsData is not null before mapping
+                                        List<String> suitablesCropsNames =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["name"]
+                                                            .toString()))
+                                                : [];
+
+                                        List<String> suitablesCropsImages =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["image"]
+                                                            .toString()))
+                                                : [];
+
+                                        List<String> suitablesCropsLink =
+                                            suitableCropsData != null
+                                                ? List<String>.from(
+                                                    suitableCropsData.map(
+                                                        (crop) => crop["link"]
+                                                            .toString()))
+                                                : [];
+
+                                        // Return ViewMorePage with the provided data
+                                        return ViewMorePage(
+                                          name: snapshot
+                                              .child("name")
+                                              .value
+                                              .toString(),
+                                          video: snapshot
+                                              .child("video")
+                                              .value
+                                              .toString(),
+                                          description: snapshot
+                                              .child("description")
+                                              .value
+                                              .toString(),
+                                          imageUrl: snapshot
+                                              .child("image")
+                                              .value
+                                              .toString(),
+                                          suitablesCropsNames:
+                                              suitablesCropsNames,
+                                          suitablesCropsImages:
+                                              suitablesCropsImages,
+                                          suitablesCropsLink:
+                                              suitablesCropsLink,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         )
                       ],
                     ),
@@ -467,83 +547,6 @@ class WeatherWidget extends StatelessWidget {
   }
 }
 
-class SoilData extends StatelessWidget {
-  SoilData({Key? key});
-  final ref = FirebaseDatabase.instance.ref("tools");
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            child: Expanded(
-              child: FirebaseAnimatedList(
-                query: ref,
-                itemBuilder: (context, snapshot, animation, index) {
-                  return CropCard(
-                    name: snapshot.child("name").value.toString(),
-                    description: snapshot.child("description").value.toString(),
-                    imageUrl: snapshot.child("image").value.toString(),
-                    price: snapshot.child("price").value.toString(),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            // Retrieve suitable crops data
-                            List<dynamic>? suitableCropsData = snapshot
-                                .child("related")
-                                .value as List<dynamic>?;
-
-                            // Check if suitableCropsData is not null before mapping
-                            List<String> suitablesCropsNames =
-                                suitableCropsData != null
-                                    ? List<String>.from(suitableCropsData
-                                        .map((crop) => crop["name"].toString()))
-                                    : [];
-
-                            List<String> suitablesCropsImages =
-                                suitableCropsData != null
-                                    ? List<String>.from(suitableCropsData.map(
-                                        (crop) => crop["image"].toString()))
-                                    : [];
-
-                            List<String> suitablesCropsLink =
-                                suitableCropsData != null
-                                    ? List<String>.from(suitableCropsData
-                                        .map((crop) => crop["link"].toString()))
-                                    : [];
-
-                            // Return ViewMorePage with the provided data
-                            return ViewMorePage(
-                              name: snapshot.child("name").value.toString(),
-                              video: snapshot.child("video").value.toString(),
-                              description: snapshot
-                                  .child("description")
-                                  .value
-                                  .toString(),
-                              imageUrl:
-                                  snapshot.child("image").value.toString(),
-                              suitablesCropsNames: suitablesCropsNames,
-                              suitablesCropsImages: suitablesCropsImages,
-                              suitablesCropsLink: suitablesCropsLink,
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class CropCard extends StatelessWidget {
   final String name;
   final String price;
@@ -563,14 +566,15 @@ class CropCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
+      child: Container(
+        padding: const EdgeInsets.all(0.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Left side: Image (30% width)
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.4,
-              height: 185,
+              height: 155,
               child: ClipRRect(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8.0),
@@ -601,7 +605,7 @@ class CropCard extends StatelessWidget {
                   Text(
                     description,
                     style: TextStyle(fontSize: 16),
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.justify,
                   ),
@@ -870,7 +874,7 @@ class ViewMorePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePageTab()),
+                                  builder: (context) => HometoolTab()),
                             );
                           },
                           style: ElevatedButton.styleFrom(

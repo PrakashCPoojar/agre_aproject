@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color(0xFF779D07),
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -68,6 +69,7 @@ class HomesoilTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final ref = FirebaseDatabase.instance.ref("soil");
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
           color: Colors.white,
@@ -143,14 +145,14 @@ class HomesoilTab extends StatelessWidget {
                   height: 200,
                   child: WeatherWidget(),
                 ),
-                SizedBox(height: 16), // Added SizedBox for spacing
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+                SizedBox(
+                  height: MediaQuery.of(context)
+                      .size
+                      .height, // Adjust height dynamically
                   child: Container(
-                    height: 569,
+                    padding: EdgeInsets.all(8.0),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start, // Align text to the left
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Soil Details",
@@ -162,6 +164,8 @@ class HomesoilTab extends StatelessWidget {
                         SizedBox(height: 0), // Added SizedBox for spacing
                         Expanded(
                           child: FirebaseAnimatedList(
+                            physics:
+                                NeverScrollableScrollPhysics(), // Disable scrolling
                             query: ref,
                             itemBuilder: (context, snapshot, animation, index) {
                               return CropCard(
@@ -177,12 +181,10 @@ class HomesoilTab extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
-                                        // Retrieve suitable crops data
                                         List<dynamic>? suitableCropsData =
                                             snapshot.child("suitable").value
                                                 as List<dynamic>?;
 
-                                        // Check if suitableCropsData is not null before mapping
                                         List<String> suitablesCropsNames =
                                             suitableCropsData != null
                                                 ? List<String>.from(
@@ -199,7 +201,6 @@ class HomesoilTab extends StatelessWidget {
                                                             .toString()))
                                                 : [];
 
-                                        // Return ViewMorePage with the provided data
                                         return ViewMorePage(
                                           name: snapshot
                                               .child("name")
@@ -566,53 +567,58 @@ class CropCard extends StatelessWidget {
             SizedBox(width: 16), // Adjusted width to reduce space
             // Right side: Name, Description, and Button (70% width)
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title
-                  Text(
-                    name.replaceFirst(name[0], name[0].toUpperCase()),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    8.0, 0, 8.0, 0), // Add padding to left and right
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Text(
+                      name.replaceFirst(name[0], name[0].toUpperCase()),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4), // Adjusted height to reduce space
-                  // Description
-                  Text(
-                    description,
-                    style: TextStyle(fontSize: 16),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 8), // Adjusted height to reduce space
-                  // Button aligned to the right
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: onPressed,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Color(0xFF779D07), // Set background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(35.0),
-                            bottomLeft: Radius.circular(0),
-                            bottomRight: Radius.circular(8.0),
+                    SizedBox(height: 4), // Adjusted height to reduce space
+                    // Description
+                    Text(
+                      description,
+                      style: TextStyle(fontSize: 16),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.justify,
+                    ),
+                    SizedBox(height: 8), // Adjusted height to reduce space
+                    // Button aligned to the right
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        onPressed: onPressed,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Color(0xFF779D07), // Set background color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(35.0),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(8.0),
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8, // Adjusted padding to reduce space
                           ),
                         ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8, // Adjusted padding to reduce space
+                        child: Text(
+                          'View More',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      child: Text(
-                        'View More',
-                        style: TextStyle(color: Colors.white),
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

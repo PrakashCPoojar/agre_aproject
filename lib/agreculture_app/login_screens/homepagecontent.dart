@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Color(0xFF779D07),
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -157,7 +158,8 @@ class HomePageTab extends StatelessWidget {
               //     onPressed: () {
               //       Navigator.push(
               //         context,
-              //         MaterialPageRoute(builder: (context) => Testing()),
+              //         MaterialPageRoute(
+              //             builder: (context) => UserProfileDialog()),
               //       );
               //     },
               //     child: const Text(
@@ -510,103 +512,106 @@ class VerticalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.all(10),
-      itemCount: imageAssetPaths.length,
-      itemBuilder: (context, index) {
-        return SizedBox(
-          height: 100, // Set the height of the card
-          child: Card(
-            margin: EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                // Left side image
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: double.infinity,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                    ),
-                    child: Image.asset(
-                      imageAssetPaths[index], // Load image from local assets
-                      fit: BoxFit.cover,
+    return SingleChildScrollView(
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(), // Disable scrolling
+        padding: EdgeInsets.all(10),
+        itemCount: imageAssetPaths.length,
+        itemBuilder: (context, index) {
+          return SizedBox(
+            height: 100, // Set the height of the card
+            child: Card(
+              margin: EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  // Left side image
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                      ),
+                      child: Image.asset(
+                        imageAssetPaths[index], // Load image from local assets
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                // Middle section
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Indian Price Tag
-                        Row(
-                          children: [
-                            // Title
-                            Text(
-                              marketpricetitle[index],
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Spacer(), // Spacer to fill the available space
-                            Text(
-                              '₹', // Indian Rupee symbol
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              ' ${marketPrices[index]}', // Price value
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10), // Add vertical padding
-                          child: Row(
+                  // Middle section
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Indian Price Tag
+                          Row(
                             children: [
-                              Spacer(), // Spacer to fill the available space
-                              Icon(
-                                Icons.arrow_upward,
-                                color: Colors
-                                    .green[900], // Set color based on condition
-                              ),
-                              SizedBox(
-                                  width:
-                                      8), // Add some space between the icon and text
+                              // Title
                               Text(
-                                '8.4 %', // Text
+                                marketpricetitle[index],
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green[900],
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Spacer(), // Spacer to fill the available space
+                              Text(
+                                '₹', // Indian Rupee symbol
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                ' ${marketPrices[index]}', // Price value
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10), // Add vertical padding
+                            child: Row(
+                              children: [
+                                Spacer(), // Spacer to fill the available space
+                                Icon(
+                                  Icons.arrow_upward,
+                                  color: Colors.green[
+                                      900], // Set color based on condition
+                                ),
+                                SizedBox(
+                                    width:
+                                        8), // Add some space between the icon and text
+                                Text(
+                                  '8.4 %', // Text
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green[900],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
