@@ -12,6 +12,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool light = true;
+  bool _obscureText = true;
 
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -87,19 +88,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Container(
-          margin: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _header(context),
-              _inputField(context),
-              _signup(context),
-            ],
+        body: SingleChildScrollView(
+          // Wrap your Scaffold with SingleChildScrollView
+          child: Container(
+            margin: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _header(context),
+                _inputField(context),
+                _signup(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -187,7 +192,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         TextFormField(
-          controller: password,
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
@@ -199,11 +203,21 @@ class _LoginPageState extends State<LoginPage> {
               borderSide: BorderSide(color: Color(0xFF779D07)),
             ),
             filled: false,
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 8), // Adjust input height here
+            contentPadding: EdgeInsets.symmetric(vertical: 8),
             prefixIcon: const Icon(
               Icons.lock,
               color: Color(0xFF779D07),
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscureText ? Icons.visibility_off : Icons.visibility,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
             ),
           ),
           validator: (value) {
@@ -212,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
             }
             return null;
           },
-          obscureText: true,
+          obscureText: _obscureText,
         ),
         const SizedBox(height: 5),
         Row(

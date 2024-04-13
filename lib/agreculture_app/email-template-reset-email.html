@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Template</title>
+    <style>
+      /* Reset CSS */
+      body,
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Typography */
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .mt {
+        margin-bottom: 20px;
+      }
+
+      /* Container */
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+      }
+
+      /* Button */
+      .button {
+        display: inline-block;
+        background-color: #779d07;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 8px 32px;
+        border-radius: 25px;
+        margin: 24px 0;
+        font-weight: 600;
+      }
+      .button:hover {
+        display: inline-block;
+        background-color: #6b8b0b;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 8px 32px;
+        border-radius: 25px;
+        margin: 24px 0;
+        font-weight: 600;
+        box-shadow: #b4b4b4;
+      }
+      .button:active {
+        display: inline-block;
+        background-color: #779d07;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 8px 32px;
+        border-radius: 25px;
+        margin: 24px 0;
+        font-weight: 600;
+      }
+      .text-gray {
+        color: #b4b4b4;
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 32px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Hello %DISPLAY_NAME%,</h1>
+      <p>Please fallow this below button to reset your password.</p>
+
+      <p>Your email: %EMAIL%</p>
+      <p>Application Name: %APP_NAME%</p>
+
+      <!-- Example button -->
+      <a href="%LINK%" class="button">Reset</a>
+
+      <p class="text-gray">
+        If you have any questions, feel free to contact us.
+      </p>
+
+      <div class="footer">
+        <p>Thanks,</p>
+        <p>BITS Student</p>
+      </div>
+    </div>
+  </body>
+</html>
