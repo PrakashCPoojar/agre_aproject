@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:agre_aproject/agreculture_app/farmerslist.dart';
+import 'package:agre_aproject/agreculture_app/login_screens/homepagecontent.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/weather.dart';
 import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -869,7 +870,7 @@ class ViewMorePage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FarmersList()),
+                                  builder: (context) => HomePageTab()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -880,7 +881,7 @@ class ViewMorePage extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'Talk to Experts',
+                            'Contact dealer',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.white,
