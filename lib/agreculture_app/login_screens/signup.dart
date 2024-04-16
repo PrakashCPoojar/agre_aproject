@@ -74,15 +74,6 @@ class signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Forgot Password',
-      //     style: TextStyle(
-      //       fontSize: 18,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      // ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -143,6 +134,10 @@ class signup extends StatelessWidget {
                               borderRadius: BorderRadius.circular(18),
                               borderSide: BorderSide(color: Color(0xFF595959)),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                borderSide:
+                                    BorderSide(color: Color(0xFF779D07))),
                             filled: false,
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 8), // Adjust input height here
@@ -166,6 +161,10 @@ class signup extends StatelessWidget {
                               borderRadius: BorderRadius.circular(18),
                               borderSide: BorderSide(color: Color(0xFF595959)),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                borderSide:
+                                    BorderSide(color: Color(0xFF779D07))),
                             filled: false,
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 8), // Adjust input height here
@@ -188,6 +187,10 @@ class signup extends StatelessWidget {
                               borderRadius: BorderRadius.circular(18),
                               borderSide: BorderSide(color: Color(0xFF595959)),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                borderSide:
+                                    BorderSide(color: Color(0xFF779D07))),
                             filled: false,
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 8), // Adjust input height here
@@ -233,7 +236,7 @@ class signup extends StatelessWidget {
                               shape: const StadiumBorder(),
                               minimumSize: Size(double.infinity,
                                   2), // Set the minimum size for the button
-                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                               backgroundColor: Color(0xFF779D07),
                             ),
                             child: const Text(
