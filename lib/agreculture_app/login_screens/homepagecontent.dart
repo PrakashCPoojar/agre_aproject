@@ -10,8 +10,9 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:weather/weather.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+// import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 void main() {
   runApp(MyApp());
@@ -623,6 +624,7 @@ class HorizontalScrollCard extends StatelessWidget {
     'assets/images/crops/jolla.jpeg',
     'assets/images/crops/bath-1.jpg',
     'assets/images/crops/adike.jpg',
+    'assets/images/dairy/dairy-farming.jpg',
   ];
 
   final List<String> blogtitles = [
@@ -631,6 +633,7 @@ class HorizontalScrollCard extends StatelessWidget {
     'Corn',
     'Rice 1001',
     'Betel nut',
+    'Dairy'
   ];
   final List<String> relatedVideos = [
     'Pkoov2xIgOA',
@@ -638,6 +641,7 @@ class HorizontalScrollCard extends StatelessWidget {
     '62NQDNGFOXo',
     'FW_bw9jdrlQ&t=14s',
     'hLMDsVN20F8',
+    'Ky2_VtCb-yA',
   ];
 
   final List<String> blogdescriptions = [
@@ -646,6 +650,7 @@ class HorizontalScrollCard extends StatelessWidget {
     'Corn plants have specific soil requirements. Early varieties grow best in sand or loam, while late varieties grow best in silty or clayey types of soil.',
     'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
     'Seedlings of 1 to 2 years of age should be planted in pits of about 90 x 90 x 90 cm at a spacing of 2.75 to 3.0 meter either way and covered with soil to the collar level of the plants and press the soil around. It is essential to provide shade during summer months.',
+    'Dairy farming is a class of agriculture for the long-term production of milk, which is processed (either on the farm or at a dairy plant, either of which may be called a dairy) for the eventual sale of a dairy product. Dairy farming has a history that goes back to the early Neolithic era, around the seventh millennium BC, in many regions of Europe and Africa. Before the 20th century, milking was done by hand on small farms. Beginning in the early 20th century, milking was done in large scale dairy farms with innovations including rotary parlors, the milking pipeline, and automatic milking systems that were commercially developed in the early 1990s.',
   ];
 
   final List<List<String>> fertilizerNames = [
@@ -668,6 +673,10 @@ class HorizontalScrollCard extends StatelessWidget {
     [
       'Areca Special',
       'ANSHUL ARECA STAR',
+    ],
+    [
+      'Weather',
+      'vaccinated',
     ],
   ];
 
@@ -692,6 +701,10 @@ class HorizontalScrollCard extends StatelessWidget {
       'assets/images/Fertilisers/betel_Ferti_1.png',
       'assets/images/Fertilisers/betel_Ferti_2.png',
     ],
+    [
+      'assets/images/dairy/Dairy-weather.jpg',
+      'assets/images/dairy/Cowvaccine.jpg',
+    ],
   ];
 
   final List<List<String>> fertiliserLinks = [
@@ -714,6 +727,10 @@ class HorizontalScrollCard extends StatelessWidget {
     [
       'https://www.agriplexindia.com/products/dr-soil-new-areca-special-organic-plant-food',
       'https://m.indiamart.com/proddetail/anshul-areca-star-liquid-fertilizer-for-arecanut-2852894068962.html?pos=2&pla=n',
+    ],
+    [
+      'https://www.manage.gov.in/publications/eBooks/Climate%20Smart%20Dairying.pdf',
+      'https://vikaspedia.in/agriculture/livestock/cattle-buffalo/vaccination-schedule-in-cattle-and-buffalo',
     ],
   ];
 
@@ -1015,23 +1032,14 @@ class DetailPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20),
-                    YoutubePlayer(
+                    YoutubePlayerIFrame(
                       controller: YoutubePlayerController(
                         initialVideoId: relatedvideos,
-                        flags: YoutubePlayerFlags(
-                          autoPlay: false,
-                          mute: false,
-                        ),
+                        params: YoutubePlayerParams(
+                            showControls: true,
+                            showFullscreenButton: true,
+                            autoPlay: false),
                       ),
-                      showVideoProgressIndicator: true,
-                      progressIndicatorColor: Colors.amber,
-                      progressColors: ProgressBarColors(
-                        playedColor: Colors.amber,
-                        handleColor: Colors.amberAccent,
-                      ),
-                      onReady: () {
-                        print('Player is ready.');
-                      },
                     ),
                   ],
                 )),

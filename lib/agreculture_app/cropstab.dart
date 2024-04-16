@@ -12,7 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:weather/weather.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+// import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -856,23 +857,14 @@ class ViewMorePage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20),
-                        YoutubePlayer(
+                        YoutubePlayerIFrame(
                           controller: YoutubePlayerController(
                             initialVideoId: video,
-                            flags: YoutubePlayerFlags(
-                              autoPlay: false,
-                              mute: false,
-                            ),
+                            params: YoutubePlayerParams(
+                                showControls: true,
+                                showFullscreenButton: true,
+                                autoPlay: false),
                           ),
-                          showVideoProgressIndicator: true,
-                          progressIndicatorColor: Colors.amber,
-                          progressColors: ProgressBarColors(
-                            playedColor: Colors.amber,
-                            handleColor: Colors.amberAccent,
-                          ),
-                          onReady: () {
-                            print('Player is ready.');
-                          },
                         ),
                       ],
                     )),

@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
     Container(
       child: Center(
-        child: MyNewsApp(),
+        child: HomecropsTab(),
       ),
     ),
     Container(

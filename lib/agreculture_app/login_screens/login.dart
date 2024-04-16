@@ -1,9 +1,9 @@
-import 'package:agre_aproject/agreculture_app/login_screens/wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:agre_aproject/agreculture_app/login_screens/forgotpassword.dart';
-import 'package:agre_aproject/agreculture_app/login_screens/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'forgotpassword.dart';
+import 'signup.dart';
+import 'wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,9 +12,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool light = true;
-
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  bool? isEmailValid; // Track email validation
+  bool ispassValid = false; // Track email validation
 
   // Function to handle sign-in
   void signin(BuildContext context) async {
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-// Login with google
+  // Login with google
   Future<void> loginWithGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -87,13 +88,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SingleChildScrollView(
-          // Wrap your Scaffold with SingleChildScrollView
           child: Container(
             margin: const EdgeInsets.all(24),
             child: Column(
@@ -115,12 +114,12 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Column(
           children: [
-            SizedBox(height: 20), // Add some space between text and image
+            SizedBox(height: 40),
             Image.asset(
-              'assets/images/login/logo.png', // Adjust the path based on your image location
-              width: 150, // Adjust width as needed
-              height: 150, // Adjust height as needed
-              fit: BoxFit.cover, // Adjust how the image fits the space
+              'assets/images/login/logo.png',
+              width: 150,
+              height: 150,
+              fit: BoxFit.cover,
             ),
             Text(
               "Welcome",
@@ -139,15 +138,15 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 16), // Add margin bottom here
+        Center(
           child: Text(
             "Sign in to Continue",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
+        SizedBox(height: 40),
         Container(
-          margin: EdgeInsets.only(bottom: 10), // Add margin bottom here
+          margin: EdgeInsets.only(bottom: 10),
           child: Text(
             "Email",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -162,29 +161,69 @@ class _LoginPageState extends State<LoginPage> {
               borderSide: BorderSide(color: Color(0xFF595959)),
             ),
             focusedBorder: OutlineInputBorder(
-              // Define the border when field is focused
               borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(color: Color(0xFF779D07)),
-              // Use primary color for the focused border
+              borderSide: BorderSide(
+                color: (() {
+                  switch (isEmailValid) {
+                    case true:
+                      return Color(0xFF779D07);
+                    case false:
+                      return Colors.red;
+                    default:
+                      return isEmailValid == null
+                          ? Colors.grey
+                          : Color.fromARGB(255, 124, 124, 124);
+                  }
+                })(),
+              ),
             ),
             filled: false,
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 8), // Adjust input height here
-            prefixIcon: const Icon(
+            contentPadding: EdgeInsets.symmetric(vertical: 8),
+            prefixIcon: Icon(
               Icons.email,
-              color: Color(0xFF779D07),
+              color: (() {
+                switch (isEmailValid) {
+                  case true:
+                    return Color(0xFF779D07);
+                  case false:
+                    return Colors.red;
+                  default:
+                    return isEmailValid == null
+                        ? Colors.grey
+                        : Color.fromARGB(255, 119, 119, 119);
+                }
+              })(),
             ),
           ),
+          onChanged: (value) {
+            setState(() {
+              // Validate email format on each change
+              isEmailValid =
+                  RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value);
+            });
+          },
           validator: (value) {
-            if (value!.isEmpty) {
+            if (value == null || value.isEmpty) {
+              setState(() {
+                isEmailValid = false;
+              });
               return 'Please enter your email';
             }
+            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              setState(() {
+                isEmailValid = false;
+              });
+              return 'Please enter a valid email';
+            }
+            setState(() {
+              isEmailValid = true;
+            });
             return null;
           },
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         Container(
-          margin: EdgeInsets.only(bottom: 10), // Add margin bottom here
+          margin: EdgeInsets.only(bottom: 10),
           child: Text(
             "Password",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -196,41 +235,45 @@ class _LoginPageState extends State<LoginPage> {
             hintText: "Password",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(color: Color(0xFF595959)),
+              borderSide: BorderSide(
+                color: ispassValid ? Color(0xFF779D07) : Colors.grey,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(color: Color(0xFF779D07)),
             ),
             filled: false,
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 8), // Adjust input height here
-            prefixIcon: const Icon(
+            contentPadding: EdgeInsets.symmetric(vertical: 8),
+            prefixIcon: Icon(
               Icons.lock,
-              color: Color(0xFF779D07),
+              color: ispassValid ? Color(0xFF779D07) : Colors.grey,
             ),
           ),
+          onChanged: (value) {
+            setState(() {
+              ispassValid = value.isNotEmpty;
+            });
+          },
           validator: (value) {
             if (value!.isEmpty) {
               return 'Please enter your password';
             }
+            ispassValid = true;
             return null;
           },
           obscureText: true,
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Transform.scale(
-              scale: 0.8, // Adjust the scale factor as needed
+              scale: 0.8,
               child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 0), // Add padding horizontally
-                margin:
-                    EdgeInsets.only(left: 0), // Adjust left margin for spacing
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                margin: EdgeInsets.only(left: 0),
                 child: Switch(
-                  // This bool value toggles the switch.
                   value: light,
                   activeColor: Color(0xFF779D07),
                   onChanged: (bool value) {
@@ -242,8 +285,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Container(
-              margin:
-                  EdgeInsets.only(left: 8), // Adjust left margin for spacing
+              margin: EdgeInsets.only(left: 8),
               child: TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -259,25 +301,16 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
-        Center(
-          child: Padding(
-            padding:
-                EdgeInsets.symmetric(vertical: 10), // Add margin top and bottom
-            child: ElevatedButton(
-              onPressed: () => signin(context),
-              // child: Text('Login'),
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                minimumSize: Size(
-                    double.infinity, 2), // Set the minimum size for the button
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                backgroundColor: Color(0xFF779D07),
-              ),
-              child: const Text(
-                "Login",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+        SizedBox(height: 40),
+        ElevatedButton(
+          onPressed: () => signin(context),
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Color(0xFF779D07)),
+            backgroundColor: Color(0xFF779D07),
+          ),
+          child: const Text(
+            'Login',
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
           ),
         ),
         Center(
@@ -291,8 +324,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Center(
           child: Container(
-            margin:
-                EdgeInsets.symmetric(vertical: 20), // Add margin top and bottom
+            margin: EdgeInsets.symmetric(vertical: 20),
             child: Text(
               'Login with Google',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
@@ -302,8 +334,8 @@ class _LoginPageState extends State<LoginPage> {
         OutlinedButton(
           onPressed: () => loginWithGoogle(context),
           style: OutlinedButton.styleFrom(
-            side: BorderSide(color: Color(0xFF779D07)), // Set border color
-          ), // Wrap the function call inside a function
+            side: BorderSide(color: Color(0xFF779D07)),
+          ),
           child: const Text(
             'Login with Google',
             style: TextStyle(color: Color(0xFF779D07)),
@@ -313,22 +345,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _signup(context) {
+  Widget _signup(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("Dont have an account? "),
         TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => signup()),
-              );
-            },
-            child: const Text(
-              "Sign Up",
-              style: TextStyle(color: Color(0xFF779D07)),
-            ))
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => signup()),
+            );
+          },
+          child: const Text(
+            "Sign Up",
+            style: TextStyle(color: Color(0xFF779D07)),
+          ),
+        ),
       ],
     );
   }
