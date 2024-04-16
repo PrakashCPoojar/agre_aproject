@@ -1,40 +1,30 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart' show kIsWeb;
-// import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
+// import 'package:agre_aproject/agreculture_app/register_web_webview.dart';
+// import 'package:agre_aproject/agreculture_app/register_web_webview_stub.dart'
+//     if (dart.library.html) 'package:agre_aproject/agreculture_app/register_web_webview_stub.dart';
 
-// void main() {
-//   runApp(MyNewsApp());
-// }
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-// class MyNewsApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text('Farmers News'),
-//         ),
-//         body: buildContent(),
-//       ),
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
+void main() {
+  // registerWebViewWebImplementation();
+  runApp(MyNewsApp());
+}
 
-//   Widget buildContent() {
-//     if (kIsWeb) {
-//       // For web, return a WebView
-//       return webview(
-//         initialUrl:
-//             'https://vijaykarnataka.com/lavalavk/agri/articlelist/11181621.cms',
-//         javascriptMode: JavascriptMode.unrestricted,
-//       );
-//     } else {
-//       // For non-web platforms, return a Flutter widget
-//       return HtmlWidget(
-//         '<iframe src="https://vijaykarnataka.com/lavalavk/agri/articlelist/11181621.cms" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>',
-//         webView: true,
-//       );
-//     }
-//   }
-// }
+class MyNewsApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Farmers News'),
+        ),
+        body: WebView(
+          initialUrl:
+              'https://vijaykarnataka.com/lavalavk/agri/articlelist/11181621.cms',
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
+      ),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
