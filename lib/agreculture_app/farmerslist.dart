@@ -152,7 +152,7 @@ class FarmersList extends StatelessWidget {
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height *
-                      1.28, // Adjust height dynamically
+                      1.05, // Adjust height dynamically
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     child: Column(

@@ -1072,7 +1072,7 @@ class DetailPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Color(0xFF779D07),
                     padding: EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 10,
