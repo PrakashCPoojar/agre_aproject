@@ -146,9 +146,8 @@ class HomesoilTab extends StatelessWidget {
                   child: WeatherWidget(),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context)
-                      .size
-                      .height, // Adjust height dynamically
+                  height: MediaQuery.of(context).size.height *
+                      1.35, // Adjust height dynamically
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     child: Column(

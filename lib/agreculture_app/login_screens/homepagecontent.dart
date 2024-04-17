@@ -619,37 +619,41 @@ class VerticalCard extends StatelessWidget {
 class HorizontalScrollCard extends StatelessWidget {
   final List<String> imageUrls = [
     'assets/images/crops/batha.jpg',
+    'assets/images/crops/roses.jpg',
+    'assets/images/crops/dairy-farming.jpg',
+    'assets/images/crops/VegetableFarming.webp',
+    'assets/images/crops/Plantation-Agricultu.jpg',
+    'assets/images/crops/mushroom-far.jpg',
     'assets/images/crops/kabbu.webp',
-    'assets/images/crops/jolla.jpeg',
-    'assets/images/crops/bath-1.jpg',
-    'assets/images/crops/adike.jpg',
-    'assets/images/dairy/dairy-farming.jpg',
   ];
 
   final List<String> blogtitles = [
     'Rice',
-    'Sugar cane',
-    'Corn',
-    'Rice 1001',
+    'Rose Farming',
+    'Dairy',
+    'Vegetable Farming',
     'Betel nut',
-    'Dairy'
+    'Small Organic crops',
+    'Sugar cane'
   ];
   final List<String> relatedVideos = [
     'Pkoov2xIgOA',
+    'SolFUJe-BlI',
+    'm_3r9RJxIhg',
+    'QBXL88qvJkw',
+    'lv-8fN5gVr4',
+    'q5V5eS1LtfI',
     'wdvrzWtkHfA',
-    '62NQDNGFOXo',
-    'FW_bw9jdrlQ&t=14s',
-    'hLMDsVN20F8',
-    'Ky2_VtCb-yA',
   ];
 
   final List<String> blogdescriptions = [
-    'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
+    'Rice crop cultivation is a meticulous process that involves several stages from preparation to harvest. It begins with land preparation, including plowing, leveling, and puddling to create a favorable environment for rice seedlings to establish their roots. Farmers then select high-quality rice seeds based on factors such as variety, yield potential, and adaptability to local conditions, often treating them with fungicides or insecticides to protect against pests and diseases. Rice can be sown using either direct seeding or transplanting methods, with water management playing a crucial role due to the crops high water requirements. Various irrigation methods, such as flood irrigation or drip systems, are employed to maintain soil moisture levels. Nutrient management is essential such as nitrogen, phosphorus, and potassium for healthy growth and high yields, with fertilizers applied based on soil nutrient levels and crop requirements. Weed, pest, and disease management practices are employed throughout the growing season to ensure crop health and minimize yield losses. Farmers monitor the crop for signs of stress factors and make timely interventions as needed. When the grains reach maturity, rice is harvested using manual cutting or mechanized methods. Post-harvest processing involves threshing, drying, and milling to produce cleaned, graded, and packaged rice ready for distribution and consumption. Sustainable practices, including water conservation and integrated pest management, are crucial for the long-term sustainability of rice farming.',
+    'Mirabel rose farming thrives in India due to its favorable climate and rich tradition in rose cultivation. This practice offers substantial economic benefits, driven by high demand both locally and globally. It also provides employment opportunities and contributes to environmental conservation efforts, thanks to its soil-preserving qualities and low water requirements. Successful Mirabel rose farming relies on specific soil conditions and planting techniques, with meticulous land preparation being crucial. Drip irrigation ensures optimal moisture levels, while organic fertilization enhances soil fertility. Pruning post-flowering enhances yield, although diseases like powdery mildew and black spot pose challenges. To tap into the market, farmers can engage local florists, participate in farmers markets, or explore online sales platforms domestically. Internationally, collaboration with exporters and online marketplaces, along with participation in global flower fairs, can expand market reach. Overall, Mirabel rose farming in India embodies a harmonious blend of economic prosperity and environmental sustainability.',
+    'Dairy farming in India has surged in importance due to its role in providing essential nutrients, offering employment opportunities, and contributing significantly to the economy as the worlds largest milk producer. Starting a dairy farm entails costs such as land, infrastructure, cattle, feed, labor, and miscellaneous expenses, with a basic setup for ten cows requiring an investment of approximately INR 10,00,000 to INR 15,00,000. The industry presents promising prospects with growing demand, profitability, government support, and various dairy farming methods catering to different needs. By crafting a strategic business plan, selecting appropriate cattle breeds, and managing costs effectively, aspiring dairy farmers can embark on a rewarding journey while contributing to Indias dairy sector. Additionally, ensuring a consistent and clean water supply for cattle is essential for maintaining their health and productivity.',
+    'Vegetable farming is a crucial contributor to Indias economy, offering high profit margins, export opportunities, and employment generation. With top-producing states including West Bengal, Uttar Pradesh, Bihar, Andhra Pradesh, and Madhya Pradesh, India ranks as the worlds second-largest vegetable producer, cultivating staples like ginger, okra, potato, onion, tomato, and more. This sectors importance lies in its ability to ensure food security and support healthier lifestyles amidst changing consumption patterns. Efficient insect and disease control, along with responsive marketing strategies, are key to sustaining profitability in this dynamic market.',
+    'Plantation farming, a hallmark of tropical and subtropical regions, stands out for its large-scale operations focused on cultivating a single crop or a narrow range of related crops. This agricultural practice, characterized by vast estates and mechanized operations, plays a crucial role in Indias economy, with states like Assam, Kerala, Tamil Nadu, Karnataka, and West Bengal emerging as key players in tea, coffee, rubber, oil palm, and jute production. Despite its economic significance in providing income and ensuring food security, plantation farming faces scrutiny due to its reliance on imported inputs, low wages, poor working conditions, and environmental impact. The cultivation of tea, coffee, rubber, oil palm, and jute serves as the backbone of plantation agriculture in India, strategically distributed across different regions. From the lush tea gardens of Assam to the sprawling coffee plantations of Karnataka and the rubber estates of Kerala, each crop contributes significantly to both the countrys export earnings and the livelihoods of millions. However, the sectors sustainability is under question as concerns persist regarding its environmental footprint and social implications, underscoring the need for balanced development in this vital aspect of Indias agricultural landscape.',
+    'Mushroom farming, also known as myciculture, involves controlled cultivation of mushrooms using organic substrates or synthetic materials instead of sunlight or soil. It begins with selecting suitable species based on market demand and climatic conditions. The process includes substrate preparation, inoculation, incubation, fruiting, and harvesting. Mushroom farming offers advantages like low capital investment, rapid growth cycles, and high yields. However, it requires careful attention to environmental factors and disease management. Despite challenges, it presents a lucrative opportunity for small-scale farmers and entrepreneurs to contribute to food security and sustainability.',
     'Sugarcane thrives in hot, sunny tropical regions with ample rainfall or irrigation, needing a long, warm growing season and high solar radiation.',
-    'Corn plants have specific soil requirements. Early varieties grow best in sand or loam, while late varieties grow best in silty or clayey types of soil.',
-    'Rice is one of the chief grains of India. Moreover, this country has the largest area under rice cultivation. As it is one of the principal food crops. It is, in fact, the dominant crop of the country. India is one of the leading producers of this crop. Rice is the basic food crop and being a tropical plant, it flourishes comfortably in a hot and humid climate.',
-    'Seedlings of 1 to 2 years of age should be planted in pits of about 90 x 90 x 90 cm at a spacing of 2.75 to 3.0 meter either way and covered with soil to the collar level of the plants and press the soil around. It is essential to provide shade during summer months.',
-    'Dairy farming is a class of agriculture for the long-term production of milk, which is processed (either on the farm or at a dairy plant, either of which may be called a dairy) for the eventual sale of a dairy product. Dairy farming has a history that goes back to the early Neolithic era, around the seventh millennium BC, in many regions of Europe and Africa. Before the 20th century, milking was done by hand on small farms. Beginning in the early 20th century, milking was done in large scale dairy farms with innovations including rotary parlors, the milking pipeline, and automatic milking systems that were commercially developed in the early 1990s.',
   ];
 
   final List<List<String>> fertilizerNames = [
@@ -658,16 +662,16 @@ class HorizontalScrollCard extends StatelessWidget {
       'NUTRI-RICE',
     ],
     [
-      'Parle Ropvatika',
-      'Sugarcane Booster',
+      'Downy Mildew',
+      'Rose Black Spot',
     ],
     [
-      'Paddy',
-      'NUTRI-RICE',
+      'Weather',
+      'Vaccine',
     ],
     [
-      'Paddy',
-      'NUTRI-RICE',
+      'Vegetable Fertilizer',
+      'Vegetable Booster',
     ],
     [
       'Areca Special',
@@ -675,7 +679,11 @@ class HorizontalScrollCard extends StatelessWidget {
     ],
     [
       'Weather',
-      'vaccinated',
+      'Material',
+    ],
+    [
+      'Parle Ropvatika',
+      'Sugarcane Booster',
     ],
   ];
 
@@ -685,24 +693,28 @@ class HorizontalScrollCard extends StatelessWidget {
       'assets/images/Fertilisers/batha.jpg',
     ],
     [
-      'assets/images/Fertilisers/sugercane_Ferti_1.jpg',
-      'assets/images/Fertilisers/sugercane_Ferti_2.png',
+      'assets/images/Fertilisers/Rose-Downy-Raze.jpg',
+      'assets/images/Fertilisers/Rose-Black-Spot.jpg',
     ],
     [
-      'assets/images/Fertilisers/corn_Ferti_1.png',
-      'assets/images/Fertilisers/corn_Ferti_2.png',
+      'assets/images/Fertilisers/Dairy-weather.jpg',
+      'assets/images/Fertilisers/Cowvaccine.jpg',
     ],
     [
-      'assets/images/Fertilisers/batha-1.jpg',
-      'assets/images/Fertilisers/batha.jpg',
+      'assets/images/Fertilisers/vegi-1.webp',
+      'assets/images/Fertilisers/vegi-2.jpg',
     ],
     [
       'assets/images/Fertilisers/betel_Ferti_1.png',
       'assets/images/Fertilisers/betel_Ferti_2.png',
     ],
     [
-      'assets/images/dairy/Dairy-weather.jpg',
-      'assets/images/dairy/Cowvaccine.jpg',
+      'assets/images/dairy/temperature-range-041723.webp',
+      'assets/images/dairy/growroom2.jpg',
+    ],
+    [
+      'assets/images/Fertilisers/sugercane_Ferti_1.jpg',
+      'assets/images/Fertilisers/sugercane_Ferti_2.png',
     ],
   ];
 
@@ -712,24 +724,28 @@ class HorizontalScrollCard extends StatelessWidget {
       'https://excelag.com/nutririce-efficacy-rice/',
     ],
     [
-      'https://www.amazon.in/Parle-Ropvatika-Sugarcane-Essential-Fertilizer/dp/B0BNXWG83N?th=1',
-      'https://agribegri.com/products/sethu-agroveer-liquid-sugarcane-booster-plant-growth-promoter.php?utm_source=google&utm_medium=pmax&utm_campaign=PMax:+Smart+All+3000&utm_term=&utm_campaign=PMax:+Smart+All+3000&utm_source=adwords&utm_medium=ppc&hsa_acc=7428009962&hsa_cam=17668524651&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAjw8diwBhAbEiwA7i_sJXQwJCEdzkQ8ImTkoV6apHUvekham8EE6-arS6U-z9xtxSC7eWagdRoCVRQQAvD_BwE',
+      'https://www.kisanestore.com/downy-raze---downy-mildew-fungicide-500-ml',
+      'https://gardenfeast.com.au/product/rose-black-spot-pyrethrum-concentrate-500ml/',
     ],
     [
-      'https://gogarden.co.in/products/urea-fertilizers-for-plants-46-nitrogen-fertilizer-soil-application-and-100-water-soluble-1',
+      'https://www.climatehubs.usda.gov/hubs/northeast/topic/weather-and-climate-considerations-dairy',
       'https://agribegri.com/products/sethu-agroveer-onion-special-booster-plant-growth-regulator.php?utm_source=google&utm_medium=pmax&utm_campaign=PMax:+Smart+All+3000&utm_term=&utm_campaign=PMax:+Smart+All+3000&utm_source=adwords&utm_medium=ppc&hsa_acc=7428009962&hsa_cam=17668524651&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAjw8diwBhAbEiwA7i_sJUCR2XTqxBuhzLQmnloMMWV9YPye0liq5GNCZX8HJjI4E80lLTW4xhoCnd0QAvD_BwE',
     ],
     [
-      'https://www.amazon.in/Agrinex-Eco-Friendly-Organic-Multi-Nutrient-Promoter/dp/B07BHQQL7L',
-      'https://excelag.com/nutririce-efficacy-rice/',
+      'https://www.urbanplant.in/products/vegetable-fertilizer-for-vegetable-plants-900g',
+      'https://www.jiomart.com/p/homeandkitchen/erwon-leafy-vegetable-booster-liquid-fertilizer-premium-essential-powerful-liquid-fertilizer-for-the-best-growth-of-leafy-vegetable-plants/606480343',
     ],
     [
       'https://www.agriplexindia.com/products/dr-soil-new-areca-special-organic-plant-food',
       'https://m.indiamart.com/proddetail/anshul-areca-star-liquid-fertilizer-for-arecanut-2852894068962.html?pos=2&pla=n',
     ],
     [
-      'https://www.manage.gov.in/publications/eBooks/Climate%20Smart%20Dairying.pdf',
-      'https://vikaspedia.in/agriculture/livestock/cattle-buffalo/vaccination-schedule-in-cattle-and-buffalo',
+      'https://jcbgourmetmushrooms.com/blogs/johns-thoughts/how-to-grow-mushrooms-indoors-during-the-summer',
+      'https://krishi.icar.gov.in/PDF/Selected_Tech/horticulture/25-Horticulture-Mushroom(white%20button)%20cultivation.pdf',
+    ],
+    [
+      'https://www.amazon.in/Parle-Ropvatika-Sugarcane-Essential-Fertilizer/dp/B0BNXWG83N?th=1',
+      'https://agribegri.com/products/sethu-agroveer-liquid-sugarcane-booster-plant-growth-promoter.php?utm_source=google&utm_medium=pmax&utm_campaign=PMax:+Smart+All+3000&utm_term=&utm_campaign=PMax:+Smart+All+3000&utm_source=adwords&utm_medium=ppc&hsa_acc=7428009962&hsa_cam=17668524651&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAjw8diwBhAbEiwA7i_sJXQwJCEdzkQ8ImTkoV6apHUvekham8EE6-arS6U-z9xtxSC7eWagdRoCVRQQAvD_BwE',
     ],
   ];
 
@@ -759,7 +775,7 @@ class HorizontalScrollCard extends StatelessWidget {
           ),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 5,
+            itemCount: 7,
             itemBuilder: (context, index) {
               return Container(
                 width: 170,
@@ -772,10 +788,10 @@ class HorizontalScrollCard extends StatelessWidget {
                       width: 200,
                       height: 120,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8.0),
-                          topRight: Radius.circular(8.0),
-                        ),
+                        // borderRadius: BorderRadius.only(
+                        //   topLeft: Radius.circular(8.0),
+                        //   topRight: Radius.circular(8.0),
+                        // ),
                         child: Image.asset(
                           imageUrls[index],
                           fit: BoxFit.cover,
