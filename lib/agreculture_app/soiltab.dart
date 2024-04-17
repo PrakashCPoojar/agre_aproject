@@ -147,7 +147,7 @@ class HomesoilTab extends StatelessWidget {
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height *
-                      1.35, // Adjust height dynamically
+                      1.20, // Adjust height dynamically
                   child: Container(
                     padding: EdgeInsets.all(8.0),
                     child: Column(

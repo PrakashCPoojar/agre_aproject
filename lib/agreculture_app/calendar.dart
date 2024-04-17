@@ -36,7 +36,7 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Select date'),
+          title: Text('Please select date'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -47,6 +47,10 @@ class _CalendarPageState extends State<CalendarPage> {
                 lastDay: DateTime.utc(2030, 12, 31),
                 focusedDay: _focusedDay,
                 calendarFormat: _calendarFormat,
+                enabledDayPredicate: (DateTime day) {
+                  final today = DateTime.now();
+                  return !day.isBefore(today.subtract(Duration(days: 1)));
+                },
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
                 },
@@ -61,7 +65,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 },
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    color: Color(0xFF779D07),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -102,8 +106,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         );
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => HomePageTab()),
+                          MaterialPageRoute(builder: (context) => MyHomePage()),
                         );
                       } catch (e) {
                         // Show error snackbar
