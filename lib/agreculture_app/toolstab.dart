@@ -8,12 +8,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:weather/weather.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -229,6 +231,18 @@ class HometoolTab extends StatelessWidget {
                                               .toString(),
                                           imageUrl: snapshot
                                               .child("image")
+                                              .value
+                                              .toString(),
+                                          industryName: snapshot
+                                              .child("industryName")
+                                              .value
+                                              .toString(),
+                                          phone: snapshot
+                                              .child("phone")
+                                              .value
+                                              .toString(),
+                                          email: snapshot
+                                              .child("email")
                                               .value
                                               .toString(),
                                           suitablesCropsNames:
@@ -658,6 +672,9 @@ class ViewMorePage extends StatelessWidget {
   final String video;
   final String description;
   final String imageUrl;
+  final String industryName;
+  final String phone;
+  final String email;
   final List<String> suitablesCropsNames;
   final List<String> suitablesCropsImages;
   final List<String> suitablesCropsLink;
@@ -667,6 +684,9 @@ class ViewMorePage extends StatelessWidget {
     required this.video,
     required this.description,
     required this.imageUrl,
+    required this.industryName,
+    required this.phone,
+    required this.email,
     required this.suitablesCropsNames,
     required this.suitablesCropsImages,
     required this.suitablesCropsLink,
@@ -852,6 +872,90 @@ class ViewMorePage extends StatelessWidget {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Align(
+                            child: Text(
+                              'Contact details',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            alignment: Alignment.bottomLeft,
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                size: 20,
+                                color: Colors.black,
+                              ),
+                              SizedBox(width: 8),
+                              Text(industryName),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.phone,
+                                size: 20,
+                                color: Colors.black,
+                              ),
+                              SizedBox(width: 8),
+                              Text(phone),
+                              SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  _launchWhatsApp(phone);
+                                },
+                                child: Image.asset(
+                                  'assets/icons/whatsapp-logo.png',
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.email,
+                                size: 20,
+                                color: Colors.black,
+                              ),
+                              SizedBox(width: 8),
+                              Text(email),
+                              SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  copyToClipboard(email);
+                                },
+                                child: Icon(
+                                  Icons.content_copy,
+                                  size: 20,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
                     SizedBox(height: 8),
                     Container(
                       // height: 52, // Adjust height as needed
@@ -861,13 +965,12 @@ class ViewMorePage extends StatelessWidget {
                       child: Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HometoolTab()),
-                            );
+                            launch('tel://${phone}');
                           },
                           style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
                             backgroundColor: Color(0xFF779D07),
                             padding: EdgeInsets.symmetric(
                               horizontal: 20,
@@ -875,7 +978,7 @@ class ViewMorePage extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'Contact dealer',
+                            'Call',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.white,
@@ -1098,4 +1201,23 @@ class ViewMorePage extends StatelessWidget {
       });
     }
   }
+}
+
+void _launchWhatsApp(String phone) async {
+  String whatsappUrl = "https://wa.me/$phone";
+  await canLaunch(whatsappUrl)
+      ? launch(whatsappUrl)
+      : print("Could not launch WhatsApp");
+}
+
+void copyToClipboard(String email) {
+  Clipboard.setData(ClipboardData(text: email));
+  Fluttertoast.showToast(
+    msg: "Email copied to clipboard",
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.black,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
 }
