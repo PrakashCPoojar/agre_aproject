@@ -16,6 +16,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:weather/weather.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 void main() async {
@@ -790,14 +791,27 @@ class ViewMorePage extends StatelessWidget {
                     // Description\
                     SizedBox(height: 8),
                     // Description
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        'Mobile: ' + phone,
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.justify,
+                    GestureDetector(
+                      onTap: () {
+                        launch('tel://${phone}');
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'Mobile: ' + phone,
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.justify,
+                          ),
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.phone,
+                            size: 24,
+                            color: Color(0xFF779D07),
+                          ),
+                        ],
                       ),
                     ),
+
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: Text(
@@ -850,6 +864,9 @@ class ViewMorePage extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
                             backgroundColor: Color(0xFF779D07),
                             padding: EdgeInsets.symmetric(
                               horizontal: 20,

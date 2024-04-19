@@ -73,9 +73,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Text(
                         'Welcome',
                         style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF779D07)),
                       ),
                     ],
                   ),
@@ -106,11 +106,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     decoration: InputDecoration(
                       hintText: "Enter your email",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
+                        borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(color: Color(0xFF595959)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
+                        borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
                           color: (() {
                             switch (isEmailValid) {
@@ -187,7 +187,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     child: ElevatedButton(
                       onPressed: () => reset(context),
                       style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        // shape: const StadiumBorder(),
                         minimumSize: Size(double.infinity, 2),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         backgroundColor: Color(0xFF779D07),

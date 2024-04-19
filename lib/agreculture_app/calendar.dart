@@ -23,12 +23,6 @@ class _CalendarPageState extends State<CalendarPage> {
   late String _selectedTime;
 
   @override
-  void initState() {
-    super.initState();
-    // _selectedTime = SuggestedTimes().suggestedTimes.first;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
@@ -89,7 +83,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   });
                 },
               ),
-              SizedBox(height: 200),
+              SizedBox(height: 150),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
@@ -104,7 +98,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             backgroundColor: Color(0xFF779D07),
                           ),
                         );
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => MyHomePage()),
                         );
@@ -128,9 +122,12 @@ class _CalendarPageState extends State<CalendarPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                     backgroundColor: Color(0xFF779D07),
                     padding: EdgeInsets.symmetric(
-                      horizontal: 20,
+                      horizontal: 68,
                       vertical: 10,
                     ),
                   ),
@@ -152,17 +149,18 @@ class SuggestedTimes extends StatefulWidget {
   final List<String> suggestedTimes;
   final Function(String) onTimeSelected;
 
-  const SuggestedTimes(
-      {required this.onTimeSelected,
-      Key? key,
-      this.suggestedTimes = const [
-        '9:00 AM',
-        '11:00 AM',
-        '2:00 PM',
-        '4:00 PM',
-        '6:00 PM',
-      ]})
-      : super(key: key);
+  const SuggestedTimes({
+    required this.onTimeSelected,
+    Key? key,
+    this.suggestedTimes = const [
+      '9:00 AM',
+      '11:00 AM',
+      '2:00 PM',
+      '4:00 PM',
+      '6:00 PM',
+      '8:00 PM',
+    ],
+  }) : super(key: key);
 
   @override
   _SuggestedTimesState createState() => _SuggestedTimesState();
@@ -179,35 +177,102 @@ class _SuggestedTimesState extends State<SuggestedTimes> {
 
   @override
   Widget build(BuildContext context) {
+    int splitIndex = widget.suggestedTimes.length ~/ 3;
+    List<String> firstThird = widget.suggestedTimes.sublist(0, splitIndex);
+    List<String> secondThird =
+        widget.suggestedTimes.sublist(splitIndex, splitIndex * 2);
+    List<String> thirdThird = widget.suggestedTimes.sublist(splitIndex * 2);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        children: widget.suggestedTimes
-            .map((time) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedTime = time;
-                      });
-                      widget.onTimeSelected(time);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _selectedTime == time
-                          ? Color(0xFF779D07)
-                          : Theme.of(context).primaryColor,
-                    ),
-                    child: Text(
-                      time,
-                      style: TextStyle(
-                        color:
-                            _selectedTime == time ? Colors.white : Colors.black,
+        children: [
+          Column(
+            children: firstThird
+                .map((time) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedTime = time;
+                          });
+                          widget.onTimeSelected(time);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _selectedTime == time
+                              ? Color(0xFF779D07)
+                              : Theme.of(context).primaryColor,
+                        ),
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                            color: _selectedTime == time
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ))
-            .toList(),
+                    ))
+                .toList(),
+          ),
+          Column(
+            children: secondThird
+                .map((time) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedTime = time;
+                          });
+                          widget.onTimeSelected(time);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _selectedTime == time
+                              ? Color(0xFF779D07)
+                              : Theme.of(context).primaryColor,
+                        ),
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                            color: _selectedTime == time
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ))
+                .toList(),
+          ),
+          Column(
+            children: thirdThird
+                .map((time) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedTime = time;
+                          });
+                          widget.onTimeSelected(time);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _selectedTime == time
+                              ? Color(0xFF779D07)
+                              : Theme.of(context).primaryColor,
+                        ),
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                            color: _selectedTime == time
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ],
       ),
     );
   }
@@ -227,8 +292,8 @@ class EmailSender {
           '${FirebaseAuth.instance.currentUser!.email}') // Recipient's email address
       ..subject = 'Your booking is confirmed'
       ..text = 'Your booking details with agriculture expert on .\n\n'
-          'Selected date: $selectedDay\n'
-          'Selected time: $selectedTime. \n\n'
+          'Date: $selectedDay\n'
+          'Time: $selectedTime. \n\n'
           'Regards,\n'
           'BITS Student (2022mt93001)';
 

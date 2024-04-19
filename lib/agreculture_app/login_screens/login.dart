@@ -157,11 +157,11 @@ class _LoginPageState extends State<LoginPage> {
           decoration: InputDecoration(
             hintText: "Enter email",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Color(0xFF595959)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: (() {
                   switch (isEmailValid) {
@@ -234,13 +234,13 @@ class _LoginPageState extends State<LoginPage> {
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: ispassValid ? Color(0xFF779D07) : Colors.grey,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Color(0xFF779D07)),
             ),
             filled: false,
@@ -305,6 +305,9 @@ class _LoginPageState extends State<LoginPage> {
         ElevatedButton(
           onPressed: () => signin(context),
           style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
             side: BorderSide(color: Color(0xFF779D07)),
             backgroundColor: Color(0xFF779D07),
           ),
@@ -334,6 +337,9 @@ class _LoginPageState extends State<LoginPage> {
         OutlinedButton(
           onPressed: () => loginWithGoogle(context),
           style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
             side: BorderSide(color: Color(0xFF779D07)),
           ),
           child: const Text(

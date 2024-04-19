@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:weather/weather.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(MyApp());
@@ -487,27 +488,126 @@ class WeatherWidget extends StatelessWidget {
 class VerticalCard extends StatelessWidget {
   // List of image asset paths
   final List<String> imageAssetPaths = [
-    'assets/images/crops/batha.jpg',
-    'assets/images/crops/kabbu.webp',
-    'assets/images/crops/jolla.jpeg',
-    'assets/images/crops/bath-1.jpg',
-    'assets/images/crops/adike.jpg',
+    'assets/images/marketprice/Cotton.jpeg',
+    'assets/images/marketprice/Jowar.jpg',
+    'assets/images/marketprice/TamarindSeed.jpg',
+    'assets/images/marketprice/maize.jpg',
+    'assets/images/marketprice/Wheat.jpg',
+    'assets/images/marketprice/Soyabean.jpg',
+    'assets/images/marketprice/BengalGram.jpg',
+    'assets/images/marketprice/Black_gram.jpg',
+    'assets/images/marketprice/Kulthi.jpg',
+    'assets/images/marketprice/FingerMillet.jpg',
+    'assets/images/marketprice/Sunflower.jpg',
+    'assets/images/marketprice/LadiesFinger.jpg',
+    'assets/images/marketprice/Cucumbar.jpg',
+    'assets/images/marketprice/GreenChilli.jpg',
+    'assets/images/marketprice/tomoto.jpg',
+    'assets/images/marketprice/Beetroot.jpeg',
+    'assets/images/marketprice/Cabbage.jpeg',
+    'assets/images/marketprice/Ginger.jpg',
+    'assets/images/marketprice/Brinjal.jpg',
+    'assets/images/marketprice/Onion.jpg',
+    'assets/images/marketprice/Potato.jpg'
   ];
 
   final List<String> marketpricetitle = [
-    'Batha',
-    'Kabhu',
-    'Jolla',
-    'Batha 1001',
-    'Adike',
+    'Cotton',
+    'Jowar',
+    'Tamarind Seed',
+    'Maize',
+    'Wheat',
+    'Soyabean',
+    'Bengal Gram',
+    'Black Gram Dal',
+    'Kulthi',
+    'Finger Millet',
+    'Safflower',
+    'Ladies Finger',
+    'Cucumbar',
+    'Green Chilli',
+    'Tomato',
+    'Beetroot',
+    'Cabbage',
+    'Ginger',
+    'Brinjal',
+    'Onion',
+    'Potato',
   ];
 
-  final List<double> marketPrices = [
-    24000.00,
-    35000.00,
-    42000.00,
-    29000.00,
-    38000.00,
+  // final String todayDate = DateFormat('dd MMM yy').format(DateTime.now());
+
+  final List<String> lastUpdate = [
+    "18 Apr 24",
+    "18 Apr 24",
+    "17 Apr 24",
+    "17 Apr 24",
+    "15 Apr 24",
+    "20 Mar 24",
+    "19 Mar 24",
+    "11 Mar 24",
+    "17 Nov 23",
+    "11 Oct 23",
+    "11 Oct 23",
+    "09 Oct 23",
+    "09 Oct 23",
+    "21 Jul 23",
+    "21 Jul 23",
+    "21 Jul 23",
+    "21 Jul 23",
+    "20 Jul 23",
+    "20 Jul 23",
+    "18 Jul 23",
+    "18 Jul 23",
+    "18 Jul 23"
+  ];
+
+  final List<double> previousMarketPrices = [
+    7829.00, // Cotton
+    2150.00, // Jowar(Sorghum)
+    2560.00, // Tamarind Seed
+    2150.00, // Maize
+    2300.00, // Wheat
+    4400.00, // Soyabean
+    6200.00, // Bengal Gram(Gram)(Whole)
+    10500.00, // Black Gram Dal (Urd Dal)
+    7000.00, // Kulthi(Horse Gram)
+    2500.00, // Ragi (Finger Millet)
+    4200.00, // Safflower
+    1500.00, // Bhindi(Ladies Finger)
+    1500.00, // Cucumbar(Kheera)
+    4000.00, // Green Chilli
+    7000.00, // Tomato
+    1000.00, // Beetroot
+    500.00, // Cabbage
+    700.00, // Ginger(Green)
+    1000.00, // Brinjal
+    1500.00, // Onion
+    1400.00, // Potato
+  ];
+
+  final List<double> currentMarketPrices = [
+    7829.00, // Cotton
+    2150.00, // Jowar(Sorghum)
+    2560.00, // Tamarind Seed
+    2150.00, // Maize
+    2300.00, // Wheat
+    4400.00, // Soyabean
+    6200.00, // Bengal Gram(Gram)(Whole)
+    10500.00, // Black Gram Dal (Urd Dal)
+    7000.00, // Kulthi(Horse Gram)
+    2500.00, // Ragi (Finger Millet)
+    4200.00, // Safflower
+    1500.00, // Bhindi(Ladies Finger)
+    1500.00, // Cucumbar(Kheera)
+    7000.00, // Green Chilli
+    9000.00, // Tomato
+    1500.00, // Beetroot
+    800.00, // Cabbage
+    11200.00, // Ginger(Green)
+    1500.00, // Brinjal
+    2000.00, // Onion
+    2000.00, // Potato
   ];
 
   @override
@@ -519,6 +619,11 @@ class VerticalCard extends StatelessWidget {
         padding: EdgeInsets.all(10),
         itemCount: imageAssetPaths.length,
         itemBuilder: (context, index) {
+          // Calculate price difference
+          final priceDifference =
+              currentMarketPrices[index] - previousMarketPrices[index];
+          final isPriceIncreased = priceDifference > 0;
+
           return SizedBox(
             height: 100, // Set the height of the card
             child: Card(
@@ -527,7 +632,7 @@ class VerticalCard extends StatelessWidget {
                 children: [
                   // Left side image
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.25,
                     height: double.infinity,
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
@@ -550,57 +655,93 @@ class VerticalCard extends StatelessWidget {
                           // Indian Price Tag
                           Row(
                             children: [
-                              // Title
-                              Text(
-                                marketpricetitle[index],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              // Left section
+                              Expanded(
+                                flex: 2, // 75% width
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Title
+                                    Text(
+                                      marketpricetitle[index],
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    // Today Price
+                                    Text(
+                                      'Price: ₹ ${currentMarketPrices[index]}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    // Last Price
+                                    Text(
+                                      'Last Price: ₹ ${previousMarketPrices[index]}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
-                              Spacer(), // Spacer to fill the available space
-                              Text(
-                                '₹', // Indian Rupee symbol
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                ' ${marketPrices[index]}', // Price value
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              // Right section
+                              Expanded(
+                                flex: 2, // 25% width
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Top section
+                                      Row(
+                                        children: [
+                                          Spacer(), // Spacer to fill the available space
+                                          Icon(
+                                            isPriceIncreased
+                                                ? Icons.arrow_upward
+                                                : Icons.arrow_downward,
+                                            color: isPriceIncreased
+                                                ? Colors.green[900]
+                                                : Colors.red[900],
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            '₹ ${priceDifference.abs()}',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: isPriceIncreased
+                                                  ? Colors.green[900]
+                                                  : Colors.red[900],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // Bottom section
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Text(
+                                          'Updated: ${lastUpdate[index]}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                          // textAlign: TextAlign.,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10), // Add vertical padding
-                            child: Row(
-                              children: [
-                                Spacer(), // Spacer to fill the available space
-                                Icon(
-                                  Icons.arrow_upward,
-                                  color: Colors.green[
-                                      900], // Set color based on condition
-                                ),
-                                SizedBox(
-                                    width:
-                                        8), // Add some space between the icon and text
-                                Text(
-                                  '8.4 %', // Text
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green[900],
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
                         ],
                       ),
@@ -632,7 +773,7 @@ class HorizontalScrollCard extends StatelessWidget {
     'Rose Farming',
     'Dairy',
     'Vegetable Farming',
-    'Betel nut',
+    'Plantation',
     'Small Organic crops',
     'Sugar cane'
   ];
@@ -709,8 +850,8 @@ class HorizontalScrollCard extends StatelessWidget {
       'assets/images/Fertilisers/betel_Ferti_2.png',
     ],
     [
-      'assets/images/dairy/temperature-range-041723.webp',
-      'assets/images/dairy/growroom2.jpg',
+      'assets/images/Fertilisers/temperature.jpg',
+      'assets/images/Fertilisers/growroom2.jpg',
     ],
     [
       'assets/images/Fertilisers/sugercane_Ferti_1.jpg',
@@ -1072,6 +1213,9 @@ class DetailPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
                     backgroundColor: Color(0xFF779D07),
                     padding: EdgeInsets.symmetric(
                       horizontal: 20,

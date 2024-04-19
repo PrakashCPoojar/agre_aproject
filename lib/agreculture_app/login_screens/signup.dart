@@ -101,9 +101,9 @@ class signup extends StatelessWidget {
                             Text(
                               'Welcome',
                               style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF779D07)),
                             ),
                           ],
                         ),
@@ -131,11 +131,11 @@ class signup extends StatelessWidget {
                           decoration: InputDecoration(
                             hintText: "Enter your full name",
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(color: Color(0xFF595959)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
                                     BorderSide(color: Color(0xFF779D07))),
                             filled: false,
@@ -156,13 +156,13 @@ class signup extends StatelessWidget {
                         child: TextField(
                           controller: email,
                           decoration: InputDecoration(
-                            hintText: "Enter your email number",
+                            hintText: "Enter your email",
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(color: Color(0xFF595959)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
                                     BorderSide(color: Color(0xFF779D07))),
                             filled: false,
@@ -182,13 +182,13 @@ class signup extends StatelessWidget {
                         child: TextField(
                           controller: password,
                           decoration: InputDecoration(
-                            hintText: "Enter your new password",
+                            hintText: "Enter your password",
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(color: Color(0xFF595959)),
                             ),
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(8),
                                 borderSide:
                                     BorderSide(color: Color(0xFF779D07))),
                             filled: false,
@@ -233,7 +233,10 @@ class signup extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: (() => _signup(context)),
                             style: ElevatedButton.styleFrom(
-                              shape: const StadiumBorder(),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              // shape: const StadiumBorder(),
                               minimumSize: Size(double.infinity,
                                   2), // Set the minimum size for the button
                               padding: const EdgeInsets.symmetric(vertical: 14),
