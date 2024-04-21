@@ -62,3 +62,31 @@ w.	After that it should look like this.
 i.	Flutter pub get // It will install all the dependency and make the project in running condition * Optional
 ii.	After that type flutter run
 iii.	Select the desired platform to Run the application.
+
+#Screenshots
+![1](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/9e58e280-5962-48fd-8b29-0cf0a9766398)
+![2](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/58eb4118-6e71-4090-b41b-cd949b15fbe6)
+![3](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/8cfd9c29-78aa-4e1f-b099-8f48ca4bdda2)
+![3-1](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/9e06aa9f-5844-4ac1-b5a4-cecb4148d612)
+![4](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/bbc05290-81a0-42cb-956c-bc5a75357ef4)
+![5](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/84b86559-a433-44de-b70c-7bf50927be0f)
+![6](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/0764e329-82a4-4341-bdab-92f04dbcc7d8)
+![7](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b3d9abfd-ea89-4595-b373-90d22238b7b4)
+![8](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/5e2abea8-d033-40cc-b78c-da1924e09cea)
+![9](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/e43c483b-1cc6-4c65-acdd-91a35301a8c4)
+![10](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/72b4db06-fb3b-4d50-b9d2-4fb172566beb)
+![11](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/85af64d9-8d2c-4ba4-8e72-a4addddcb397)
+![12](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/fb688831-7324-462b-a362-38ec46aa0bca)
+![13](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/f3189173-57be-4a41-a2a3-55d6d2b49a44)
+![14](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/2035d2a0-79c8-4744-809e-d18730a99185)
+![15](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/96e3a135-405c-431e-9dd7-d8d51d37f89d)
+![16](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/4973c9aa-b8e2-401c-b992-bc17d0d08ac1)
+![17](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/97ec466a-7d78-465c-808b-58881a836ffc)
+![18](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b28bdca7-3cd9-4d1b-85a3-24558bc0b4bc)
+![19](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b2f17a67-3ea8-4226-b933-9ba50425651d)
+![20](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/90e53a38-9931-4b82-96bf-fad87fc0bca2)
+![21](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/9ccfa61e-7a39-4c49-bf4c-d2001431c8e6)
+![22](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/c9d99b48-bc9b-4ba0-a5d2-fe2939577bd7)
+![23](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/015e9e51-3820-4786-82d0-01cd9e3357ae)
+![24](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/9854d9a9-0ad0-4cf8-ab78-40913a5093db)
+
