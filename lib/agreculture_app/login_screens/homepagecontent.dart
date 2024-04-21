@@ -326,14 +326,6 @@ class HomePageTab extends StatelessWidget {
       await uploadTask.whenComplete(() async {
         String imageUrl = await storageReference.getDownloadURL();
 
-        // Update user profile image URL in Firestore or Realtime Database
-        // Example:
-        // await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
-        //   'profileImageUrl': imageUrl,
-        // });
-        // or
-        // await FirebaseDatabase.instance.reference().child('users/${FirebaseAuth.instance.currentUser!.uid}/profileImageUrl').set(imageUrl);
-
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Image uploaded successfully.'),
@@ -1036,7 +1028,7 @@ class DetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 50, child: Container(color: Colors.green)),
+            SizedBox(height: 50, child: Container(color: Color(0xFF779D07))),
             Container(
               height: 50,
               padding: const EdgeInsets.all(8),
