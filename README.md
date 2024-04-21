@@ -1,34 +1,64 @@
 # Agriculture flutter application
-1) Take a clone from Github (https://github.com/PrakashCPoojar/agre_aproject/)
-  i) Open your local folder where you want to clone the project
-  ii) Select the same location on Git Bash
-  iii) In git bash type git clone https://github.com/PrakashCPoojar/agre_aproject.git
-  iv) cd agre_aproject
-2) Start the application by following below steps
-   i) Istall required Dependency (flutter pub get)
-   ii) flutter run
+Please fallow the following steps to get the Project Source Code and Local configuration.
+Installing Agriculture application locally. 
+1.	Open the command prompt select D drive with command D:
+2.	Type mkdir project // It will create folder with a name project.
+3.	Type cd project // It will select the project folder and now you should be inside the folder in command prompt.
+4.	Type ‘git clone https://github.com/PrakashCPoojar/agre_aproject.git ‘ // It will clone all the Agriculture application code to project folder and it will create folder with name of “agre_aproject” .
+5.	Type cd agre_aproject
+6.	Open the Agriculture project in your VS Code (IDE).
+Note: We have added all required dependencies in pubspec.yml file.
+7.	After opening Agriculture project in IDE click on Terminal -> New Terminal and IDE will select your project.
+8.	Type flutter pub get // It will install all the dependencies.
+Connecting with DB Firebase.
+1.	Create an Account in Firebase https://firebase.google.com/ 
+2.	Go to the Firebase Console https://console.firebase.google.com/ 
+3.	Create a new project / Add project.
+4.	Enter name of your project Agriculture-93001
+5.	For the moment you don’t want Google Analytics, turn off Enable Google Analytics for this project.
+6.	Click on the Create Project // It will take some time.
+7.	It will popup Your Firebase project is ready. 
+8.	Select your project in Firebase console // Agriculture-93001
+9.	Select an option Get started by adding Firebase to your app
+10.	Select the Android icon
+ ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/7d444432-8184-4599-824b-9b04a8ac08cf)
+11.	Enter Android package name.
+a.	Open IDE and select/open Android folder -> app ->  build.gradle
+b.	Open the build.gradle file and scroll down to defaultConfig  section you will find the applicationID “com.example.agre_aproject” copy the applicationID and paste in register app in firebase.
+c.	Next option Debug signing certificate SHA-1 Note: Important to add to get this follow the below steps.
+i.	Open your Command prompt type
+ii.	keytool -list -v -keystore C:\Users\ADD-YOUR-PROFILE-NAME-SYSTEM\.android\debug.keystore -alias androiddebugkey
+iii.	It will ask you to enter password type “android”
+![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/9b4f82e3-81f6-4cba-a726-1ad61240b39b)
+d.	Copy the SHA1 and paste in your firebase input form.
+e.	Click on Register app button.
+f.	Next step is Download and then add configuration file.
+g.	Click on the Download google-services.json
+h.	Copy that file and paste inside the project/agre_aproject/android/app
+i.	After that click Next button
+j.	Next step Add Firebase ASK
+k.	Select Groovy (build.gradle) radio button
+l.	Open the project level build.gradle file project/agre_aproject/android/build.gradle
+m.	Add ‘classpath 'com.google.gms:google-services:4.3.15' In the  dependencies section and it should look like refer below figure
+![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/ae7d15de-2074-4516-98c8-f55668754690)
 
-* It will ask you to select platform if you are not running the Android studuio Simulator
+n.	On next Open the app level build.gradle file project/agre_aproject/android/app
+o.	Add id 'com.google.gms.google-services'  in plugins section
+ ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/be2d68c0-04b0-4a92-a7ae-5deba91e15bb)
+p.	Add implementation platform('com.google.firebase:firebase-bom:32.8.1') In dependencies section.
+ ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/a78ac900-5fde-4225-95b8-9b1be7794340)
 
-## Project Screens
-![Screenshot 2024-03-26 161321](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/6b9c8b27-83ea-4013-9e87-c6d100b148ef)
-![Screenshot 2024-03-26 161440](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b653469c-ccca-4004-82ae-1db53a00a262)
-![Screenshot 2024-03-26 161611](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/ed1d3125-a104-456e-b2ca-eceaac4169af)
-![Screenshot 2024-03-26 161702](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/82ddfa15-1aff-4796-861e-2e4b388c1e37)
-![Screenshot 2024-03-26 161801](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/f1bf0681-da44-427e-a0a7-2fde20df89cf)
-![Screenshot 2024-03-26 161924](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/b91d0210-dab6-4a98-90e1-753160271610)
-![Screenshot 2024-03-26 162113](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/136b0da1-656c-423d-b14e-1377a464c810)
-![Screenshot 2024-03-26 162144](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/cbb036a2-85d9-433d-9163-109d927b3af3)
-![Screenshot 2024-03-26 162302](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/8ac0c428-0f88-4b4a-a087-1b37f95b4336)
-![Screenshot 2024-03-26 162355](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/bddd1026-7247-4b7e-9840-1a6b3924bcfd)
-![Screenshot 2024-03-26 162458](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/6e2e2d0d-591c-4fc3-8eb7-0b8d683b5cf0)
-![Screenshot 2024-03-26 162524](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/51b68f58-9a1c-4b82-bedc-d45290c4f0cc)
-![Screenshot 2024-03-26 162612](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/40a96409-b456-42ff-bac5-147f48d857df)
-![Screenshot 2024-03-26 162701](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/52d73ae7-5132-4687-97e6-738d814f199e)
-![Screenshot 2024-03-26 162836](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/baec81e2-ac9c-4c12-ab99-6e5ce60c5590)
-![Screenshot 2024-03-26 165133](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/333e657a-56db-4920-ba3b-10e8e465593e)
-![Screenshot 2024-03-26 165230](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/23a56814-49fc-47e6-806d-284c7c7a4707)
-![Screenshot 2024-03-26 165310](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/960a3854-9add-4a11-9db7-19985370dfa5)
-![Screenshot 2024-03-26 165413](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/d37122e3-31c6-415b-a1df-ce504d6f23f0)
-![Screenshot 2024-03-26 165447](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/541716bb-ede8-48cd-851e-79469c0bb09c)
+q.	Click next and finish the Firebase setup.
+r.	It will Automatically redirect to project settings page on the left side navigation you will find the Authentication option .
+s.	Select Authentication and Follow the instructions on the page click on the Get started and enable Email/Password and Google authentication.
+ ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/88942d29-8d8b-4d10-a284-4fdb0c71c05d)
+t.	On the left navigation section, you will find the Realtime Database select the option.
+u.	On the right section you will find the tree dots … click on that and select the Import JSON option, on the popup select brows option. 
+v.	And redirect to project/agre_aproject/DB-tables/ select the JSON file to import the project data.
+w.	After that it should look like this.
+ ![image](https://github.com/PrakashCPoojar/agre_aproject/assets/126979638/1d9a90b3-ab97-4c5b-81b5-31dfdfa5278b)
 
+12.	And come back to IDE in terminal type.
+i.	Flutter pub get // It will install all the dependency and make the project in running condition * Optional
+ii.	After that type flutter run
+iii.	Select the desired platform to Run the application.
